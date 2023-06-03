@@ -4,6 +4,6 @@ namespace SpellSmarty.Domain.Interfaces
 {
     public interface IVideoRepository
     {
-        Task<IEnumerable<Video>> GetAll();
+        Task<IEnumerable<VideoModel>> GetAll();
     }
 }

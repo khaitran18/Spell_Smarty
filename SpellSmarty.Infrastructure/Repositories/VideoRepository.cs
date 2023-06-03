@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using SpellSmarty.Domain.Interfaces;
 using SpellSmarty.Domain.Models;
 using SpellSmarty.Infrastructure.Data;
+using SpellSmarty.Infrastructure.DataModels;
 
 namespace SpellSmarty.Infrastructure.Repositories
 {
@@ -17,10 +18,33 @@ namespace SpellSmarty.Infrastructure.Repositories
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<Video>> GetAll()
+        public async Task<IEnumerable<VideoModel>> GetAll()
         {
-            var list = await _context.Videos.ToListAsync();
-            return _mapper.Map<IEnumerable<Video>>(list);
+            IEnumerable<Video> list = await _context.Videos
+                .Include(vid=>vid.LevelNavigation)
+                .Include(vid=>vid.VideoGenres)
+                .ToListAsync();
+            List<VideoModel> modelList = new List<VideoModel>();
+            foreach (var video in list)
+            {
+                VideoModel videoModel = _mapper.Map<VideoModel>(video);
+
+                List<string> genreNames = new List<string>();
+                foreach (var videoGenre in video.VideoGenres)
+                {
+                    string genreName = _context.Genres
+                        .FirstOrDefault(g => g.GenreId == videoGenre.GenreId)
+                        ?.GenreName;
+
+                    if (!string.IsNullOrEmpty(genreName))
+                        genreNames.Add(genreName);
+                }
+
+                videoModel.VideoGenres = genreNames;
+                modelList.Add(videoModel);
+            }
+
+            return modelList;
         }
     }
 }

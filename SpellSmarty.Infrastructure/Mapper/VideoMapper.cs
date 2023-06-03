@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using SpellSmarty.Domain.Models;
+using SpellSmarty.Infrastructure.DataModels;
 
 namespace SpellSmarty.Infrastructure.Mapper
 {
@@ -6,8 +8,10 @@ namespace SpellSmarty.Infrastructure.Mapper
     {
         public VideoMapper()
         {
-            CreateMap<SpellSmarty.Infrastructure.DataModels.Video, SpellSmarty.Domain.Models.Video>();
-            CreateMap<SpellSmarty.Domain.Models.Video, SpellSmarty.Infrastructure.DataModels.Video>();
+            CreateMap<VideoModel, Video>();
+            CreateMap<Video, VideoModel>()
+                .ForMember(dest => dest.level, opt => opt.MapFrom(src => src.LevelNavigation.Name));
         }
+
     }
 }

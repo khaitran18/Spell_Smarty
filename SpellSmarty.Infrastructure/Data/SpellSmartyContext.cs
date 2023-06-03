@@ -1,4 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.Configuration;
 using SpellSmarty.Infrastructure.DataModels;
 
@@ -16,17 +19,15 @@ namespace SpellSmarty.Infrastructure.Data
         {
             _configuration = configuration;
         }
-        
+
         public virtual DbSet<Account> Accounts { get; set; } = null!;
         public virtual DbSet<Feedback> Feedbacks { get; set; } = null!;
         public virtual DbSet<Genre> Genres { get; set; } = null!;
+        public virtual DbSet<Level> Levels { get; set; } = null!;
         public virtual DbSet<Plan> Plans { get; set; } = null!;
         public virtual DbSet<Video> Videos { get; set; } = null!;
         public virtual DbSet<VideoGenre> VideoGenres { get; set; } = null!;
         public virtual DbSet<VideoStat> VideoStats { get; set; } = null!;
-
-
-
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -110,6 +111,15 @@ namespace SpellSmarty.Infrastructure.Data
                     .HasColumnName("genre_name");
             });
 
+            modelBuilder.Entity<Level>(entity =>
+            {
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.Name)
+                    .HasMaxLength(20)
+                    .HasColumnName("name");
+            });
+
             modelBuilder.Entity<Plan>(entity =>
             {
                 entity.Property(e => e.Planid).HasColumnName("planid");
@@ -123,11 +133,17 @@ namespace SpellSmarty.Infrastructure.Data
             {
                 entity.Property(e => e.Videoid).HasColumnName("videoid");
 
+                entity.Property(e => e.AddedDate)
+                    .HasColumnType("datetime")
+                    .HasColumnName("added_date");
+
                 entity.Property(e => e.ChannelName)
                     .HasMaxLength(255)
                     .HasColumnName("channel_name");
 
                 entity.Property(e => e.LearntCount).HasColumnName("learnt_count");
+
+                entity.Property(e => e.Level).HasColumnName("level");
 
                 entity.Property(e => e.Rating).HasColumnName("rating");
 
@@ -148,6 +164,12 @@ namespace SpellSmarty.Infrastructure.Data
                 entity.Property(e => e.VideoDescription)
                     .HasMaxLength(255)
                     .HasColumnName("video_description");
+
+                entity.HasOne(d => d.LevelNavigation)
+                    .WithMany(p => p.Videos)
+                    .HasForeignKey(d => d.Level)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Videos__level__534D60F1");
             });
 
             modelBuilder.Entity<VideoGenre>(entity =>

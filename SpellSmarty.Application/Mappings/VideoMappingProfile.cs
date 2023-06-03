@@ -8,8 +8,8 @@ namespace SpellSmarty.Application.Mappings
     {
         public VideoMappingProfile()
         {
-            CreateMap<Video, VideoDto>();
-            CreateMap<VideoDto, Video>();
+            CreateMap<VideoModel, VideoDto>();
+            CreateMap<VideoDto, VideoModel>();
         }
     }
 }

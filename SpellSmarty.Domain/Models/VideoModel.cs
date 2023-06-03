@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SpellSmarty.Domain.Models
 {
-    public class Video
+    public class VideoModel
     {
         public double? Rating { get; set; }
         public string Subtitle { get; set; } = null!;
@@ -16,6 +16,8 @@ namespace SpellSmarty.Domain.Models
         public string? ChannelName { get; set; }
         public int LearntCount { get; set; }
         public string? VideoDescription { get; set; }
-
+        public string level { get; set; }
+        public DateTime AddedDate { get; set; }
+        public IEnumerable<string> VideoGenres { get; set; }
     }
 }

@@ -16,5 +16,9 @@ namespace SpellSmarty.Application.Dtos
         public string? ChannelName { get; set; }
         public int LearntCount { get; set; }
         public string? VideoDescription { get; set; }
+        public string level { get; set; }
+        public DateTime AddedDate { get; set; }
+        public IEnumerable<string> VideoGenres { get; set; }
+
     }
 }

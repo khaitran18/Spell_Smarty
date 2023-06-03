@@ -1,4 +1,7 @@
-﻿namespace SpellSmarty.Infrastructure.DataModels
+﻿using System;
+using System.Collections.Generic;
+
+namespace SpellSmarty.Infrastructure.DataModels
 {
     public partial class Video
     {
@@ -17,7 +20,9 @@
         public string? ChannelName { get; set; }
         public int LearntCount { get; set; }
         public string? VideoDescription { get; set; }
-
+        public int Level { get; set; }
+        public DateTime AddedDate { get; set; }
+        public virtual Level LevelNavigation { get; set; } = null!;
         public virtual ICollection<VideoGenre> VideoGenres { get; set; }
         public virtual ICollection<VideoStat> VideoStats { get; set; }
     }
