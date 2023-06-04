@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using SpellSmarty.Application.Queries;
+using SpellSmarty.Application.QueryHandlers;
 
 namespace SpellSmarty.Api.Controllers
 {
@@ -24,10 +25,20 @@ namespace SpellSmarty.Api.Controllers
         }
 
         // GET api/<VideoController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+        [Route("GetVideoByVideoId")]
+        [HttpGet()]
+        public async Task<ActionResult> GetSingleVideo(int videoId)
         {
-            return "value";
+            var video = await _mediator.Send(new GetSingleVideoQuery(videoId));
+            return Ok(video);
+        }
+
+        [Route("GetVideoByUserId")]
+        [HttpGet()]
+        public async Task<ActionResult> GetVideosByUserId(int userId)
+        {
+            var videos = await _mediator.Send(new GetVideosByUserIdQuery(userId));
+            return Ok(videos);
         }
 
         // POST api/<VideoController>

@@ -45,5 +45,49 @@ namespace SpellSmarty.Infrastructure.Repositories
 
             return modelList;
         }
+
+        public async Task<VideoModel> GetVideoById(int videoid)
+        {
+            Video video = _context.Videos
+                .Include(x => x.VideoGenres)
+                .Include(x => x.LevelNavigation)
+                .Where(x => x.Videoid == videoid).FirstOrDefault();
+
+            VideoModel videoModel = _mapper.Map<VideoModel>(video);
+            var genreNames = video.VideoGenres.Join(_context.Genres
+                    , vd => vd.GenreId
+                    , genre => genre.GenreId
+                    , (name, genre) => genre.GenreName
+                    );
+            videoModel.VideoGenres = genreNames;
+
+            return videoModel;
+        }
+
+        public async Task<IEnumerable<VideoModel>> GetVideosByUserId(int userId)
+        {
+            IEnumerable<Video> list = await _context.Videos
+                .Include(vid => vid.LevelNavigation)
+                .Include(vid => vid.VideoGenres)
+                .Include(vid => vid.VideoStats)
+                .Where(x => x.VideoStats.FirstOrDefault().AccountId == userId)
+                .ToListAsync();
+            List<VideoModel> modelList = new List<VideoModel>();
+            foreach (var video in list)
+            {
+                VideoModel videoModel = _mapper.Map<VideoModel>(video);
+                var genreNames = video.VideoGenres.Join(_context.Genres
+                    , vd => vd.GenreId
+                    , genre => genre.GenreId
+                    , (name, genre) => genre.GenreName
+                    );
+                var progess = video.VideoStats.FirstOrDefault().Progress;
+                videoModel.progress = progess;
+                videoModel.VideoGenres = genreNames;
+                modelList.Add(videoModel);
+            }
+
+            return modelList;
+        }
     }
 }
