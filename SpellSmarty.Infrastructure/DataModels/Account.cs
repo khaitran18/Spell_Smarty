@@ -14,7 +14,7 @@ namespace SpellSmarty.Infrastructure.DataModels
         public int Id { get; set; }
         public string Username { get; set; } = null!;
         public string Password { get; set; } = null!;
-        public string? Email { get; set; }
+        public string Email { get; set; } = null!;
         public string? Name { get; set; }
         public int Planid { get; set; }
         public DateTime? SubribeDate { get; set; }

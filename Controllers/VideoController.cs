@@ -1,7 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using SpellSmarty.Application.Queries;
-using SpellSmarty.Domain.Interfaces;
 
 namespace SpellSmarty.Api.Controllers
 {

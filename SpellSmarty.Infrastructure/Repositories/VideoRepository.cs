@@ -7,18 +7,18 @@ using SpellSmarty.Infrastructure.DataModels;
 
 namespace SpellSmarty.Infrastructure.Repositories
 {
-    public class VideoRepository : IVideoRepository
+    public class VideoRepository : BaseRepository<VideoModel>, IVideoRepository
     {
         private readonly SpellSmartyContext _context;
         private readonly IMapper _mapper;
 
-        public VideoRepository(SpellSmartyContext context, IMapper mapper)
+        public VideoRepository(SpellSmartyContext context, IMapper mapper) : base(context)
         {
             _context = context;
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<VideoModel>> GetAll()
+        public async Task<IEnumerable<VideoModel>> GetAllWithGenre()
         {
             IEnumerable<Video> list = await _context.Videos
                 .Include(vid=>vid.LevelNavigation)
@@ -28,18 +28,11 @@ namespace SpellSmarty.Infrastructure.Repositories
             foreach (var video in list)
             {
                 VideoModel videoModel = _mapper.Map<VideoModel>(video);
-
-                List<string> genreNames = new List<string>();
-                foreach (var videoGenre in video.VideoGenres)
-                {
-                    string genreName = _context.Genres
-                        .FirstOrDefault(g => g.GenreId == videoGenre.GenreId)
-                        ?.GenreName;
-
-                    if (!string.IsNullOrEmpty(genreName))
-                        genreNames.Add(genreName);
-                }
-
+                var genreNames = video.VideoGenres.Join(_context.Genres
+                    , vd => vd.GenreId
+                    , genre => genre.GenreId
+                    , (name, genre) => genre.GenreName
+                    );
                 videoModel.VideoGenres = genreNames;
                 modelList.Add(videoModel);
             }

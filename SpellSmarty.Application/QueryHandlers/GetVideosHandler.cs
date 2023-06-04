@@ -20,7 +20,7 @@ namespace SpellSmarty.Application.QueryHandlers
 
         public async Task<IEnumerable<VideoDto>> Handle(GetVideosQuery request, CancellationToken cancellationToken)
         {
-            List<VideoDto> listDto = _mapper.Map<List<VideoDto>>(await _unitOfWork.VideosRepository.GetAll());
+            List<VideoDto> listDto = _mapper.Map<List<VideoDto>>(await _unitOfWork.VideosRepository.GetAllWithGenre());
             return listDto;
         }
     }

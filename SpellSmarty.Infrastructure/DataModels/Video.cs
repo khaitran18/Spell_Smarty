@@ -22,6 +22,7 @@ namespace SpellSmarty.Infrastructure.DataModels
         public string? VideoDescription { get; set; }
         public int Level { get; set; }
         public DateTime AddedDate { get; set; }
+
         public virtual Level LevelNavigation { get; set; } = null!;
         public virtual ICollection<VideoGenre> VideoGenres { get; set; }
         public virtual ICollection<VideoStat> VideoStats { get; set; }

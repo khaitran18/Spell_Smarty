@@ -14,8 +14,7 @@ namespace SpellSmarty.Infrastructure.Data
         {
         }
 
-        public SpellSmartyContext(DbContextOptions<SpellSmartyContext> options, IConfiguration configuration)
-            : base(options)
+        public SpellSmartyContext(DbContextOptions<SpellSmartyContext> options, IConfiguration configuration): base(options)
         {
             _configuration = configuration;
         }
@@ -60,7 +59,9 @@ namespace SpellSmarty.Infrastructure.Data
                     .HasMaxLength(255)
                     .HasColumnName("password");
 
-                entity.Property(e => e.Planid).HasColumnName("planid");
+                entity.Property(e => e.Planid)
+                    .HasColumnName("planid")
+                    .HasDefaultValueSql("((1))");
 
                 entity.Property(e => e.SubribeDate)
                     .HasColumnType("datetime")

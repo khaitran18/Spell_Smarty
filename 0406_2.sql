@@ -1,6 +1,6 @@
 USE [master]
 GO
-/****** Object:  Database [SpellSmarty]    Script Date: 6/4/2023 1:56:58 AM ******/
+/****** Object:  Database [SpellSmarty]    Script Date: 6/4/2023 3:27:06 PM ******/
 CREATE DATABASE [SpellSmarty]
  CONTAINMENT = NONE
  ON  PRIMARY 
@@ -80,7 +80,7 @@ ALTER DATABASE [SpellSmarty] SET QUERY_STORE = OFF
 GO
 USE [SpellSmarty]
 GO
-/****** Object:  Table [dbo].[Accounts]    Script Date: 6/4/2023 1:56:58 AM ******/
+/****** Object:  Table [dbo].[Accounts]    Script Date: 6/4/2023 3:27:06 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -89,18 +89,18 @@ CREATE TABLE [dbo].[Accounts](
 	[id] [int] IDENTITY(1,1) NOT NULL,
 	[username] [nvarchar](255) NOT NULL,
 	[password] [nvarchar](255) NOT NULL,
-	[email] [nvarchar](255) NULL,
+	[email] [nvarchar](255) NOT NULL,
 	[name] [nvarchar](255) NULL,
 	[planid] [int] NOT NULL,
 	[subribe_date] [datetime] NULL,
 	[end_date] [datetime] NULL,
-PRIMARY KEY CLUSTERED 
+ CONSTRAINT [PK__Accounts__3213E83FBF275E5B] PRIMARY KEY CLUSTERED 
 (
 	[id] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Feedbacks]    Script Date: 6/4/2023 1:56:58 AM ******/
+/****** Object:  Table [dbo].[Feedbacks]    Script Date: 6/4/2023 3:27:06 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -117,7 +117,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Genres]    Script Date: 6/4/2023 1:56:58 AM ******/
+/****** Object:  Table [dbo].[Genres]    Script Date: 6/4/2023 3:27:06 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -131,7 +131,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Levels]    Script Date: 6/4/2023 1:56:58 AM ******/
+/****** Object:  Table [dbo].[Levels]    Script Date: 6/4/2023 3:27:06 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -145,7 +145,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Plans]    Script Date: 6/4/2023 1:56:58 AM ******/
+/****** Object:  Table [dbo].[Plans]    Script Date: 6/4/2023 3:27:06 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -159,7 +159,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[VideoGenre]    Script Date: 6/4/2023 1:56:58 AM ******/
+/****** Object:  Table [dbo].[VideoGenre]    Script Date: 6/4/2023 3:27:06 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -174,7 +174,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Videos]    Script Date: 6/4/2023 1:56:58 AM ******/
+/****** Object:  Table [dbo].[Videos]    Script Date: 6/4/2023 3:27:06 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -197,7 +197,7 @@ CREATE TABLE [dbo].[Videos](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[VideoStat]    Script Date: 6/4/2023 1:56:58 AM ******/
+/****** Object:  Table [dbo].[VideoStat]    Script Date: 6/4/2023 3:27:06 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -212,6 +212,14 @@ CREATE TABLE [dbo].[VideoStat](
 	[stat_id] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
+GO
+SET IDENTITY_INSERT [dbo].[Accounts] ON 
+GO
+INSERT [dbo].[Accounts] ([id], [username], [password], [email], [name], [planid], [subribe_date], [end_date]) VALUES (1, N'khaitran', N'1', N'khaitranquang@gmail.com', N'Khai', 1, NULL, NULL)
+GO
+INSERT [dbo].[Accounts] ([id], [username], [password], [email], [name], [planid], [subribe_date], [end_date]) VALUES (3, N'khaine', N'1', N'khaine@gmail.com', NULL, 1, NULL, NULL)
+GO
+SET IDENTITY_INSERT [dbo].[Accounts] OFF
 GO
 SET IDENTITY_INSERT [dbo].[Genres] ON 
 GO
@@ -237,6 +245,14 @@ INSERT [dbo].[Levels] ([id], [name]) VALUES (6, N'C2')
 GO
 SET IDENTITY_INSERT [dbo].[Levels] OFF
 GO
+SET IDENTITY_INSERT [dbo].[Plans] ON 
+GO
+INSERT [dbo].[Plans] ([planid], [plan_name]) VALUES (1, N'Free')
+GO
+INSERT [dbo].[Plans] ([planid], [plan_name]) VALUES (2, N'Premium')
+GO
+SET IDENTITY_INSERT [dbo].[Plans] OFF
+GO
 SET IDENTITY_INSERT [dbo].[VideoGenre] ON 
 GO
 INSERT [dbo].[VideoGenre] ([video_id], [genre_id], [video_genre_id]) VALUES (2, 1, 4)
@@ -255,11 +271,17 @@ INSERT [dbo].[Videos] ([videoid], [rating], [subtitle], [src_id], [title], [thum
 GO
 SET IDENTITY_INSERT [dbo].[Videos] OFF
 GO
-ALTER TABLE [dbo].[Accounts]  WITH CHECK ADD FOREIGN KEY([planid])
+ALTER TABLE [dbo].[Accounts] ADD  CONSTRAINT [DF_Accounts_planid]  DEFAULT ((1)) FOR [planid]
+GO
+ALTER TABLE [dbo].[Accounts]  WITH CHECK ADD  CONSTRAINT [FK__Accounts__planid__267ABA7A] FOREIGN KEY([planid])
 REFERENCES [dbo].[Plans] ([planid])
 GO
-ALTER TABLE [dbo].[Feedbacks]  WITH CHECK ADD FOREIGN KEY([account_id])
+ALTER TABLE [dbo].[Accounts] CHECK CONSTRAINT [FK__Accounts__planid__267ABA7A]
+GO
+ALTER TABLE [dbo].[Feedbacks]  WITH CHECK ADD  CONSTRAINT [FK__Feedbacks__accou__403A8C7D] FOREIGN KEY([account_id])
 REFERENCES [dbo].[Accounts] ([id])
+GO
+ALTER TABLE [dbo].[Feedbacks] CHECK CONSTRAINT [FK__Feedbacks__accou__403A8C7D]
 GO
 ALTER TABLE [dbo].[VideoGenre]  WITH CHECK ADD FOREIGN KEY([genre_id])
 REFERENCES [dbo].[Genres] ([genre_id])
