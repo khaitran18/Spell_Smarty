@@ -8,18 +8,22 @@
 
   <ItemGroup>
     <Compile Remove="Infrastructure\**" />
+    <Compile Remove="Models\**" />
     <Compile Remove="SpellSmarty.Application\**" />
     <Compile Remove="SpellSmarty.Domain\**" />
     <Compile Remove="SpellSmarty.Infrastructure\**" />
     <Content Remove="Infrastructure\**" />
+    <Content Remove="Models\**" />
     <Content Remove="SpellSmarty.Application\**" />
     <Content Remove="SpellSmarty.Domain\**" />
     <Content Remove="SpellSmarty.Infrastructure\**" />
     <EmbeddedResource Remove="Infrastructure\**" />
+    <EmbeddedResource Remove="Models\**" />
     <EmbeddedResource Remove="SpellSmarty.Application\**" />
     <EmbeddedResource Remove="SpellSmarty.Domain\**" />
     <EmbeddedResource Remove="SpellSmarty.Infrastructure\**" />
     <None Remove="Infrastructure\**" />
+    <None Remove="Models\**" />
     <None Remove="SpellSmarty.Application\**" />
     <None Remove="SpellSmarty.Domain\**" />
     <None Remove="SpellSmarty.Infrastructure\**" />
@@ -28,6 +32,7 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="12.0.1" />
     <PackageReference Include="MediatR" Version="12.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.16" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
   </ItemGroup>
 
@@ -35,10 +40,6 @@
     <ProjectReference Include="SpellSmarty.Application\SpellSmarty.Application.csproj" />
     <ProjectReference Include="SpellSmarty.Domain\SpellSmarty.Domain.csproj" />
     <ProjectReference Include="SpellSmarty.Infrastructure\SpellSmarty.Infrastructure.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Models\" />
   </ItemGroup>
 
 </Project>

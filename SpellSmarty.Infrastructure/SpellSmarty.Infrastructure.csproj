@@ -22,11 +22,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\SpellSmarty.Application\SpellSmarty.Application.csproj" />
     <ProjectReference Include="..\SpellSmarty.Domain\SpellSmarty.Domain.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Mapper\Resolver\" />
   </ItemGroup>
 
 </Project>

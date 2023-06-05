@@ -11,11 +11,48 @@ using SpellSmarty.Application.Queries;
 using SpellSmarty.Application.Dtos;
 using SpellSmarty.Application.QueryHandlers;
 using SpellSmarty.Infrastructure.Mapper;
+using SpellSmarty.Infrastructure.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using SpellSmarty.Application.CommandHandlers;
+using SpellSmarty.Application.Commands;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllers();
+// For authentication
+var _key = builder.Configuration["Jwt:Key"];
+var _issuer = builder.Configuration["Jwt:Issuer"];
+var _audience = builder.Configuration["Jwt:Audience"];
+var _expirtyMinutes = builder.Configuration["Jwt:ExpiryMinutes"];
+
+
+// Configuration for token
+builder.Services.AddAuthentication(x =>
+{
+    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(x =>
+{
+    x.RequireHttpsMetadata = false;
+    x.SaveToken = true;
+    x.TokenValidationParameters = new TokenValidationParameters()
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidAudience = _audience,
+        ValidIssuer = _issuer,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_key)),
+        ClockSkew = TimeSpan.FromMinutes(Convert.ToDouble(_expirtyMinutes))
+
+    };
+});
+builder.Services.AddSingleton<ITokenGenerator>(new TokenGenerator(_key, _issuer, _audience, _expirtyMinutes));
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -27,7 +64,7 @@ builder.Services.AddScoped(typeof(IBaseRepository<>),typeof(BaseRepository<>));
 builder.Services.AddScoped<IRequestHandler<GetVideosQuery, IEnumerable<VideoDto>>, GetVideosHandler>();
 builder.Services.AddScoped<IRequestHandler<GetVideosByUserIdQuery, IEnumerable<VideoDto>>, GetVideosByUserIdHandler>();
 builder.Services.AddScoped<IRequestHandler<GetSingleVideoQuery, VideoDto>, GetSingleVideoHandler>();
-
+builder.Services.AddScoped<IRequestHandler<AuthCommand, AuthResponseDto>, AuthHandler>();
 // Register MediatR
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
 
@@ -37,6 +74,7 @@ var mapperConfig = new MapperConfiguration(cfg =>
 {
     cfg.AddProfile<VideoMappingProfile>();
     cfg.AddProfile<VideoMapper>();
+    cfg.AddProfile<AccountMapper>();
 });
 var mapper = mapperConfig.CreateMapper();
 builder.Services.AddSingleton(mapper);

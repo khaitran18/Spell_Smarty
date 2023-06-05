@@ -1,7 +1,10 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SpellSmarty.Application.Queries;
 using SpellSmarty.Application.QueryHandlers;
+using SpellSmarty.Infrastructure.DataModels;
 
 namespace SpellSmarty.Api.Controllers
 {
@@ -17,6 +20,8 @@ namespace SpellSmarty.Api.Controllers
         }
 
         // GET: api/<VideoController>
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [Authorize(Roles = "Free,Premium,Staff")]
         [HttpGet]
         public async Task<ActionResult> GetVideos()
         {

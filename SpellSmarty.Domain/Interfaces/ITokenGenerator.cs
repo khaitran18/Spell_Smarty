@@ -6,10 +6,8 @@ using System.Threading.Tasks;
 
 namespace SpellSmarty.Domain.Interfaces
 {
-    public interface IUnitOfWork : IDisposable
+    public interface ITokenGenerator
     {
-        IVideoRepository VideosRepository { get; }
-        IAccountRepository AccountRepository { get; }
-        void Save();
+        public string GenerateJWTToken((int userId, string userName, string roles) userDetails);
     }
 }

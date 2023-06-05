@@ -1,4 +1,5 @@
-﻿using SpellSmarty.Domain.Interfaces;
+﻿using AutoMapper;
+using SpellSmarty.Domain.Interfaces;
 using SpellSmarty.Domain.Models;
 using SpellSmarty.Infrastructure.Data;
 using SpellSmarty.Infrastructure.DataModels;
@@ -13,14 +14,33 @@ namespace SpellSmarty.Infrastructure.Repositories
     public class AccountRepository : BaseRepository<AccountModel>, IAccountRepository
     {
         private readonly SpellSmartyContext _context;
-        public AccountRepository(SpellSmartyContext context) : base(context)
+        private readonly IMapper _mapper;
+        public AccountRepository(SpellSmartyContext context,IMapper mapper) : base(context)
         {
             _context = context;
+            _mapper = mapper;
         }
 
-        public async Task<bool> CheckAccount(int id)
+        public async Task<int> CheckAccountAsync(string username, string password)
         {
-            return _context.Accounts.Any(a => a.Id == id);
+            var acc = _context.Accounts.FirstOrDefault(a => a.Username.Equals(username));
+            if (acc != null)
+            {
+                if (acc.Password.Equals(_context.Accounts.FirstOrDefault(a => a.Username.Equals(username)).Password))
+                    return await Task.FromResult(acc.Id);
+            }
+            return await Task.FromResult(-1);
+        }
+
+        public async Task<(int userId, string UserName, string plan)> GetAccountDetailsByIdAsync(int id)
+        {
+            Account account = _context.Accounts.FirstOrDefault(a => a.Id == id);
+            AccountModel acc = _mapper.Map < AccountModel > (account);
+            return await Task.FromResult(
+                (acc.Id
+                ,acc.Username
+                ,_context.Plans.FirstOrDefault(p=>p.Planid== acc.Planid).PlanName)
+                );
         }
     }
 }
