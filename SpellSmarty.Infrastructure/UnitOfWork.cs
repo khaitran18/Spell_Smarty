@@ -10,7 +10,7 @@ namespace SpellSmarty.Infrastructure
         private readonly SpellSmartyContext _context;
         private readonly IMapper _mapper;
         private IVideoRepository _videoRepository;
-
+        private IVideoStatRepository _videoStatRepository;
         public UnitOfWork(SpellSmartyContext context, IMapper mapper)
         {
             _context = context;
@@ -18,6 +18,7 @@ namespace SpellSmarty.Infrastructure
         }
 
         public IVideoRepository VideosRepository => _videoRepository ??= new VideoRepository(_context,_mapper);
+        public IVideoStatRepository VideoStatRepository => _videoStatRepository ??= new VideoStatRepository(_context, _mapper);
 
         public void Dispose()
         {
