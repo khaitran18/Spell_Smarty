@@ -29,7 +29,11 @@ var _issuer = builder.Configuration["Jwt:Issuer"];
 var _audience = builder.Configuration["Jwt:Audience"];
 var _expirtyMinutes = builder.Configuration["Jwt:ExpiryMinutes"];
 
-
+//services cors
+builder.Services.AddCors(p => p.AddPolicy("corsapp", builder =>
+{
+    builder.WithOrigins("*").AllowAnyMethod().AllowAnyHeader();
+}));
 // Configuration for token
 builder.Services.AddAuthentication(x =>
 {
@@ -101,7 +105,7 @@ app.UseSwagger();
 app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
-
+app.UseCors("corsapp");
 app.UseAuthorization();
 
 app.MapControllers();
