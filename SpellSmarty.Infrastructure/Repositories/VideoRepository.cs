@@ -60,7 +60,6 @@ namespace SpellSmarty.Infrastructure.Repositories
                     , (name, genre) => genre.GenreName
                     );
             videoModel.VideoGenres = genreNames;
-
             return videoModel;
         }
 

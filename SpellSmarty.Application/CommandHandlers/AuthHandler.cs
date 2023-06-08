@@ -3,11 +3,6 @@ using Ordering.Application.Common.Exceptions;
 using SpellSmarty.Application.Commands;
 using SpellSmarty.Application.Dtos;
 using SpellSmarty.Domain.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SpellSmarty.Application.CommandHandlers
 {
@@ -27,7 +22,11 @@ namespace SpellSmarty.Application.CommandHandlers
             int userId = await _unitOfWork.AccountRepository.CheckAccountAsync(request.UserName, request.Password);
             if (userId==-1)
             {
-                throw new BadRequestException("Invalid username or password");
+                throw new BadRequestException("Wrong username or password");
+            }
+            if (userId==0)
+            {
+                throw new BadRequestException("Email not verify");
             }
             else
             {

@@ -24,31 +24,10 @@ namespace SpellSmarty.Api.Controllers
         {
             return Ok(await _mediator.Send(command));
         }
-
-        // GET: api/<AuthController>
-        [HttpGet]
-        public IEnumerable<string> Get()
+        [HttpPost("signup")]
+        public async Task<IActionResult> Signup([FromBody] SignUpCommand command)
         {
-            return new string[] { "value1", "value2" };
-        }
-
-        // GET api/<AuthController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
-
-        // PUT api/<AuthController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/<AuthController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
+            return Ok(await _mediator.Send(command));
         }
     }
 }

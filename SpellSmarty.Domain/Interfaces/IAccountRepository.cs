@@ -11,5 +11,6 @@ namespace SpellSmarty.Domain.Interfaces
     {
         Task<int> CheckAccountAsync(string username, string password);
         Task<(int userId, string UserName, string plan)> GetAccountDetailsByIdAsync(int id);
+        Task<AccountModel> SignUpAsync(string username, string password, string email,string name);
     }
 }

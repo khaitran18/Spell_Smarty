@@ -11,6 +11,6 @@ namespace SpellSmarty.Domain.Models
         public int StatId { get; set; }
         public int UserId { get; set; }
         public int VideoId { get; set; }
-        public int Progress { get; set; }
+        public string? Progress { get; set; }
     }
 }

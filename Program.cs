@@ -68,6 +68,7 @@ builder.Services.AddScoped<IRequestHandler<GetSingleVideoQuery, VideoDto>, GetSi
 builder.Services.AddScoped<IRequestHandler<AuthCommand, AuthResponseDto>, AuthHandler>();
 builder.Services.AddScoped<IRequestHandler<GetVideosByCreatorQuery, IEnumerable<VideoDto>>, GetVideosByCreatorHandler>();
 builder.Services.AddScoped<IRequestHandler<SaveProgressQuery, VideoStatDto>, SaveProgressHandler>();
+builder.Services.AddScoped<IRequestHandler<SignUpCommand, AccountModel>, SignUpHandler>();
 
 
 

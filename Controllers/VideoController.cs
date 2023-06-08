@@ -20,8 +20,8 @@ namespace SpellSmarty.Api.Controllers
         }
 
         // GET: api/<VideoController>
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        [Authorize(Roles = "Free,Premium,Staff")]
+        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        //[Authorize(Roles = "Free,Premium")]
         [HttpGet]
         public async Task<ActionResult> GetVideos()
         {
@@ -57,7 +57,7 @@ namespace SpellSmarty.Api.Controllers
         // POST api/<VideoController>
         [Route("SaveProgress")]
         [HttpPost]
-        public async Task<ActionResult> SaveProgress(int statId, int progress)
+        public async Task<ActionResult> SaveProgress(int statId, string progress)
         {
             var videos = await _mediator.Send(new SaveProgressQuery(statId, progress));
             return Ok(videos);
