@@ -19,7 +19,7 @@ namespace SpellSmarty.Domain.Models
         public string level { get; set; }
         public DateTime AddedDate { get; set; }
         public IEnumerable<string> VideoGenres { get; set; }
-        public int? progress { get; set; }
+        public string? progress { get; set; }
 
     }
 }

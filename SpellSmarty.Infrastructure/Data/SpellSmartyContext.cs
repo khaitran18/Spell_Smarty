@@ -14,7 +14,8 @@ namespace SpellSmarty.Infrastructure.Data
         {
         }
 
-        public SpellSmartyContext(DbContextOptions<SpellSmartyContext> options, IConfiguration configuration): base(options)
+        public SpellSmartyContext(DbContextOptions<SpellSmartyContext> options,IConfiguration configuration)
+            : base(options)
         {
             _configuration = configuration;
         }
@@ -46,6 +47,8 @@ namespace SpellSmarty.Infrastructure.Data
                 entity.Property(e => e.Email)
                     .HasMaxLength(255)
                     .HasColumnName("email");
+
+                entity.Property(e => e.EmailVerify).HasColumnName("email_verify");
 
                 entity.Property(e => e.EndDate)
                     .HasColumnType("datetime")

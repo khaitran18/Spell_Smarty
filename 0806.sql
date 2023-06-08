@@ -1,6 +1,6 @@
 USE [master]
 GO
-/****** Object:  Database [SpellSmarty]    Script Date: 6/4/2023 3:27:06 PM ******/
+/****** Object:  Database [SpellSmarty]    Script Date: 6/8/2023 7:00:23 PM ******/
 CREATE DATABASE [SpellSmarty]
  CONTAINMENT = NONE
  ON  PRIMARY 
@@ -80,7 +80,7 @@ ALTER DATABASE [SpellSmarty] SET QUERY_STORE = OFF
 GO
 USE [SpellSmarty]
 GO
-/****** Object:  Table [dbo].[Accounts]    Script Date: 6/4/2023 3:27:06 PM ******/
+/****** Object:  Table [dbo].[Accounts]    Script Date: 6/8/2023 7:00:23 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -100,7 +100,7 @@ CREATE TABLE [dbo].[Accounts](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Feedbacks]    Script Date: 6/4/2023 3:27:06 PM ******/
+/****** Object:  Table [dbo].[Feedbacks]    Script Date: 6/8/2023 7:00:23 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -117,7 +117,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Genres]    Script Date: 6/4/2023 3:27:06 PM ******/
+/****** Object:  Table [dbo].[Genres]    Script Date: 6/8/2023 7:00:23 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -131,7 +131,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Levels]    Script Date: 6/4/2023 3:27:06 PM ******/
+/****** Object:  Table [dbo].[Levels]    Script Date: 6/8/2023 7:00:23 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -145,7 +145,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Plans]    Script Date: 6/4/2023 3:27:06 PM ******/
+/****** Object:  Table [dbo].[Plans]    Script Date: 6/8/2023 7:00:23 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -159,7 +159,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[VideoGenre]    Script Date: 6/4/2023 3:27:06 PM ******/
+/****** Object:  Table [dbo].[VideoGenre]    Script Date: 6/8/2023 7:00:23 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -174,7 +174,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Videos]    Script Date: 6/4/2023 3:27:06 PM ******/
+/****** Object:  Table [dbo].[Videos]    Script Date: 6/8/2023 7:00:23 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -197,7 +197,7 @@ CREATE TABLE [dbo].[Videos](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[VideoStat]    Script Date: 6/4/2023 3:27:06 PM ******/
+/****** Object:  Table [dbo].[VideoStat]    Script Date: 6/8/2023 7:00:23 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -206,70 +206,12 @@ CREATE TABLE [dbo].[VideoStat](
 	[stat_id] [int] IDENTITY(1,1) NOT NULL,
 	[account_id] [int] NOT NULL,
 	[video_id] [int] NOT NULL,
-	[progress] [int] NOT NULL,
+	[progress] [nvarchar](max) NOT NULL,
  CONSTRAINT [PK__VideoSta__B8A525606C1C7598] PRIMARY KEY CLUSTERED 
 (
 	[stat_id] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY]
-GO
-SET IDENTITY_INSERT [dbo].[Accounts] ON 
-GO
-INSERT [dbo].[Accounts] ([id], [username], [password], [email], [name], [planid], [subribe_date], [end_date]) VALUES (1, N'khaitran', N'1', N'khaitranquang@gmail.com', N'Khai', 1, NULL, NULL)
-GO
-INSERT [dbo].[Accounts] ([id], [username], [password], [email], [name], [planid], [subribe_date], [end_date]) VALUES (3, N'khaine', N'1', N'khaine@gmail.com', NULL, 1, NULL, NULL)
-GO
-SET IDENTITY_INSERT [dbo].[Accounts] OFF
-GO
-SET IDENTITY_INSERT [dbo].[Genres] ON 
-GO
-INSERT [dbo].[Genres] ([genre_id], [genre_name]) VALUES (1, N'Cartoon')
-GO
-INSERT [dbo].[Genres] ([genre_id], [genre_name]) VALUES (2, N'Documentary')
-GO
-SET IDENTITY_INSERT [dbo].[Genres] OFF
-GO
-SET IDENTITY_INSERT [dbo].[Levels] ON 
-GO
-INSERT [dbo].[Levels] ([id], [name]) VALUES (1, N'A1')
-GO
-INSERT [dbo].[Levels] ([id], [name]) VALUES (2, N'A2')
-GO
-INSERT [dbo].[Levels] ([id], [name]) VALUES (3, N'B1')
-GO
-INSERT [dbo].[Levels] ([id], [name]) VALUES (4, N'B2')
-GO
-INSERT [dbo].[Levels] ([id], [name]) VALUES (5, N'C1')
-GO
-INSERT [dbo].[Levels] ([id], [name]) VALUES (6, N'C2')
-GO
-SET IDENTITY_INSERT [dbo].[Levels] OFF
-GO
-SET IDENTITY_INSERT [dbo].[Plans] ON 
-GO
-INSERT [dbo].[Plans] ([planid], [plan_name]) VALUES (1, N'Free')
-GO
-INSERT [dbo].[Plans] ([planid], [plan_name]) VALUES (2, N'Premium')
-GO
-SET IDENTITY_INSERT [dbo].[Plans] OFF
-GO
-SET IDENTITY_INSERT [dbo].[VideoGenre] ON 
-GO
-INSERT [dbo].[VideoGenre] ([video_id], [genre_id], [video_genre_id]) VALUES (2, 1, 4)
-GO
-INSERT [dbo].[VideoGenre] ([video_id], [genre_id], [video_genre_id]) VALUES (2, 2, 5)
-GO
-INSERT [dbo].[VideoGenre] ([video_id], [genre_id], [video_genre_id]) VALUES (3, 1, 7)
-GO
-SET IDENTITY_INSERT [dbo].[VideoGenre] OFF
-GO
-SET IDENTITY_INSERT [dbo].[Videos] ON 
-GO
-INSERT [dbo].[Videos] ([videoid], [rating], [subtitle], [src_id], [title], [thumbnail_link], [channel_name], [learnt_count], [video_description], [level], [added_date]) VALUES (2, 5, N'aa', N'aa', N'aa', N'aa', N'aa', 0, N'hehe', 1, CAST(N'2023-03-06T00:00:00.000' AS DateTime))
-GO
-INSERT [dbo].[Videos] ([videoid], [rating], [subtitle], [src_id], [title], [thumbnail_link], [channel_name], [learnt_count], [video_description], [level], [added_date]) VALUES (3, 4, N'hehe', N'hehe', N'hehe', N'hee', N'KhaiChannel', 100, N'Dictation online', 3, CAST(N'2023-04-06T00:00:00.000' AS DateTime))
-GO
-SET IDENTITY_INSERT [dbo].[Videos] OFF
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
 ALTER TABLE [dbo].[Accounts] ADD  CONSTRAINT [DF_Accounts_planid]  DEFAULT ((1)) FOR [planid]
 GO

@@ -20,8 +20,8 @@ namespace SpellSmarty.Api.Controllers
         }
 
         // GET: api/<VideoController>
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        [Authorize(Roles = "Free,Premium,Staff")]
+        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        //[Authorize(Roles = "Free,Premium")]
         [HttpGet]
         public async Task<ActionResult> GetVideos()
         {
@@ -38,6 +38,14 @@ namespace SpellSmarty.Api.Controllers
             return Ok(video);
         }
 
+        [Route("GetVideosByCreator")]
+        [HttpGet()]
+        public async Task<ActionResult> GetVideosByCreator(string creator)
+        {
+            var video = await _mediator.Send(new GetVideosByCreatorQuery(creator));
+            return Ok(video);
+        }
+
         [Route("GetVideoByUserId")]
         [HttpGet()]
         public async Task<ActionResult> GetVideosByUserId(int userId)
@@ -47,9 +55,12 @@ namespace SpellSmarty.Api.Controllers
         }
 
         // POST api/<VideoController>
+        [Route("SaveProgress")]
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<ActionResult> SaveProgress(int statId, string progress)
         {
+            var videos = await _mediator.Send(new SaveProgressQuery(statId, progress));
+            return Ok(videos);
         }
 
         // PUT api/<VideoController>/5

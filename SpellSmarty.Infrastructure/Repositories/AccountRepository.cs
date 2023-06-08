@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Ordering.Application.Common.Exceptions;
 using SpellSmarty.Domain.Interfaces;
 using SpellSmarty.Domain.Models;
 using SpellSmarty.Infrastructure.Data;
@@ -27,7 +28,13 @@ namespace SpellSmarty.Infrastructure.Repositories
             if (acc != null)
             {
                 if (acc.Password.Equals(_context.Accounts.FirstOrDefault(a => a.Username.Equals(username)).Password))
-                    return await Task.FromResult(acc.Id);
+                {
+                    if (acc.EmailVerify == true)
+                    {
+                        return await Task.FromResult(acc.Id);
+                    }
+                    else return await Task.FromResult(0);
+                }
             }
             return await Task.FromResult(-1);
         }
@@ -35,12 +42,51 @@ namespace SpellSmarty.Infrastructure.Repositories
         public async Task<(int userId, string UserName, string plan)> GetAccountDetailsByIdAsync(int id)
         {
             Account account = _context.Accounts.FirstOrDefault(a => a.Id == id);
-            AccountModel acc = _mapper.Map < AccountModel > (account);
+            AccountModel acc = _mapper.Map <AccountModel>(account);
             return await Task.FromResult(
                 (acc.Id
                 ,acc.Username
                 ,_context.Plans.FirstOrDefault(p=>p.Planid== acc.Planid).PlanName)
                 );
+        }
+
+        public async Task<bool> ExistUsername(string username) => _context.Accounts.Any(a => a.Username.Equals(username));
+        public async Task<bool> ExistEmail(string email) => _context.Accounts.Any(a => a.Email.Equals(email));
+
+        public async Task<AccountModel> SignUpAsync(string username, string password, string email, string name)
+        {
+            if (await ExistEmail(email))
+            {
+                throw new BadRequestException("Email existed");
+            }
+            if (await ExistUsername(username))
+            {
+                throw new BadRequestException("Username existed");
+            }
+
+            // SEND EMAIL SERVICE HERE
+            ///////////////////////////
+            ///
+            /// 
+            /// 
+            /// 
+            /// 
+            ///////////////////////////
+            ///
+            AccountModel am = new AccountModel
+            {
+                Email = email,
+                Name = name,
+                Password = password,
+                Username = username,
+                EmailVerify = false
+            };
+            if (_context.Accounts.AddAsync(_mapper.Map<Account>(am)).IsCompletedSuccessfully)
+            {
+                _context.SaveChanges();
+                return am;
+            }
+            else throw new BadRequestException("Error in creating new account");
         }
     }
 }

@@ -18,4 +18,8 @@
     <ProjectReference Include="..\SpellSmarty.Domain\SpellSmarty.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Common\Enum\" />
+  </ItemGroup>
+
 </Project>

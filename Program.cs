@@ -17,6 +17,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using SpellSmarty.Application.CommandHandlers;
 using SpellSmarty.Application.Commands;
+using SpellSmarty.Domain.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -65,6 +66,12 @@ builder.Services.AddScoped<IRequestHandler<GetVideosQuery, IEnumerable<VideoDto>
 builder.Services.AddScoped<IRequestHandler<GetVideosByUserIdQuery, IEnumerable<VideoDto>>, GetVideosByUserIdHandler>();
 builder.Services.AddScoped<IRequestHandler<GetSingleVideoQuery, VideoDto>, GetSingleVideoHandler>();
 builder.Services.AddScoped<IRequestHandler<AuthCommand, AuthResponseDto>, AuthHandler>();
+builder.Services.AddScoped<IRequestHandler<GetVideosByCreatorQuery, IEnumerable<VideoDto>>, GetVideosByCreatorHandler>();
+builder.Services.AddScoped<IRequestHandler<SaveProgressQuery, VideoStatDto>, SaveProgressHandler>();
+builder.Services.AddScoped<IRequestHandler<SignUpCommand, AccountModel>, SignUpHandler>();
+
+
+
 // Register MediatR
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
 
@@ -73,8 +80,10 @@ builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.Get
 var mapperConfig = new MapperConfiguration(cfg =>
 {
     cfg.AddProfile<VideoMappingProfile>();
+    cfg.AddProfile<VideoStatMappingProfile>();
     cfg.AddProfile<VideoMapper>();
     cfg.AddProfile<AccountMapper>();
+    cfg.AddProfile<VideoStatMapper>();
 });
 var mapper = mapperConfig.CreateMapper();
 builder.Services.AddSingleton(mapper);
