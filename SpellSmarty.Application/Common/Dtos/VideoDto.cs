@@ -8,6 +8,7 @@ namespace SpellSmarty.Application.Dtos
 {
     public class VideoDto
     {
+        public int Videoid { get; set; }
         public double? Rating { get; set; }
         public string Subtitle { get; set; } = null!;
         public string SrcId { get; set; } = null!;

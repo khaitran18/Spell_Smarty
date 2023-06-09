@@ -34,6 +34,7 @@ builder.Services.AddCors(p => p.AddPolicy("corsapp", builder =>
 {
     builder.WithOrigins("*").AllowAnyMethod().AllowAnyHeader();
 }));
+
 // Configuration for token
 builder.Services.AddAuthentication(x =>
 {
