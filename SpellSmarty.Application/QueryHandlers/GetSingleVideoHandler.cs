@@ -22,10 +22,16 @@ namespace SpellSmarty.Application.QueryHandlers
 
         public async Task<VideoDto> Handle(GetSingleVideoQuery request, CancellationToken cancellationToken)
         {
-            //check if user is a free user from request header
-            bool freeUser = (_tokenService.ValidateToken(request.token)?.IsInRole("Free")) ?? false;
+            bool freeUser;
+            if (request.token == null) {
+                freeUser = true;
+            }
+            else
+            {
+                freeUser = (_tokenService.ValidateToken(request.token)?.IsInRole("Free")) ?? false;
+            }
             VideoDto Dto = _mapper.Map<VideoDto>(await _unitOfWork.VideosRepository.GetVideoById(request.videoId));
-            if ((freeUser)&&(Dto.Premium)) Dto.Subtitle = "";
+            if ((freeUser)&&(Dto.Premium)) Dto.Subtitle = null;
             return Dto;
         }
     }
