@@ -3,7 +3,7 @@ namespace SpellSmarty.Application.Services
 {
     public interface ITokenServices
     {
-        public string GenerateJWTToken((int userId, string userName, string roles) userDetails);
+        public string GenerateJWTToken((int? userId, string? userName, string? roles) userDetails);
 
         /// <summary>
         /// using to extract claim from token from header.Authorization
@@ -12,6 +12,6 @@ namespace SpellSmarty.Application.Services
         /// <param name="jwtToken"></param>
         /// <returns></returns>
         public ClaimsPrincipal ValidateToken(string jwtToken);
-        
+
     }
 }

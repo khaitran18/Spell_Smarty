@@ -20,6 +20,7 @@ namespace SpellSmarty.Infrastructure.DataModels
         public DateTime? SubribeDate { get; set; }
         public DateTime? EndDate { get; set; }
         public bool? EmailVerify { get; set; }
+        public string? VerifyToken { get; set; }
 
         public virtual Plan Plan { get; set; } = null!;
         public virtual ICollection<Feedback> Feedbacks { get; set; }

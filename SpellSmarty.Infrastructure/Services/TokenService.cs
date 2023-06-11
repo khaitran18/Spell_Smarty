@@ -23,19 +23,18 @@ namespace SpellSmarty.Infrastructure.Services
             _expiryMinutes = expiryMinutes;
         }
 
-        public string GenerateJWTToken((int userId, string userName, string roles) userDetails)
+        public string GenerateJWTToken((int? userId, string? userName, string? roles) userDetails)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_key));
             var signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
             var (userId, userName, roles) = userDetails;
 
-            var claims = new List<Claim>()
-            {
-                new Claim(JwtRegisteredClaimNames.Sub, userName),
-                new Claim(JwtRegisteredClaimNames.Jti, userId.ToString()),
-                new Claim("username", userName),
-                new Claim(ClaimTypes.Role,roles)
-            };
+            var claims = new List<Claim>();
+            claims.Add(new Claim(JwtRegisteredClaimNames.Sub, userName));
+            claims.Add(new Claim(JwtRegisteredClaimNames.Jti, userId.ToString()));
+            claims.Add(new Claim("username", userName));
+            claims.Add(new Claim(ClaimTypes.Role, roles));
+
 
             var token = new JwtSecurityToken(
                 issuer: _issuer,
@@ -48,11 +47,15 @@ namespace SpellSmarty.Infrastructure.Services
             var encodedToken = new JwtSecurityTokenHandler().WriteToken(token);
             return encodedToken;
         }
-
         public ClaimsPrincipal ValidateToken(string jwtToken)
         {
             // token now include bearer, we dont need bearer
-            jwtToken = jwtToken.Substring(jwtToken.IndexOf(" ")+1);
+            var index = jwtToken.IndexOf(" ");
+            if (index != -1)
+            {
+                jwtToken = jwtToken.Substring(index + 1);
+            }
+            
             IdentityModelEventSource.ShowPII = true;
             SecurityToken validatedToken;
             TokenValidationParameters validationParameters = new TokenValidationParameters();

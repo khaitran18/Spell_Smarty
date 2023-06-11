@@ -10,14 +10,14 @@ namespace SpellSmarty.Infrastructure.Data
     public partial class SpellSmartyContext : DbContext
     {
         private readonly IConfiguration _configuration;
-        public SpellSmartyContext()
-        {
-        }
 
-        public SpellSmartyContext(DbContextOptions<SpellSmartyContext> options, IConfiguration configuration)
-            : base(options)
+        public SpellSmartyContext(DbContextOptions options,IConfiguration configuration) : base(options)
         {
             _configuration = configuration;
+        }
+
+        protected SpellSmartyContext()
+        {
         }
 
         public virtual DbSet<Account> Accounts { get; set; } = null!;
@@ -73,6 +73,11 @@ namespace SpellSmarty.Infrastructure.Data
                 entity.Property(e => e.Username)
                     .HasMaxLength(255)
                     .HasColumnName("username");
+
+                entity.Property(e => e.VerifyToken)
+                    .HasMaxLength(500)
+                    .HasColumnName("verifyToken")
+                    .IsFixedLength();
 
                 entity.HasOne(d => d.Plan)
                     .WithMany(p => p.Accounts)
