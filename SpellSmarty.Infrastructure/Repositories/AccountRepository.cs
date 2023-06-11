@@ -27,7 +27,7 @@ namespace SpellSmarty.Infrastructure.Repositories
             var acc = _context.Accounts.FirstOrDefault(a => a.Username.Equals(username));
             if (acc != null)
             {
-                if (acc.Password.Equals(_context.Accounts.FirstOrDefault(a => a.Username.Equals(username)).Password))
+                if (acc.Password.Equals(password))
                 {
                     if (acc.EmailVerify == true)
                     {
