@@ -21,6 +21,6 @@ namespace SpellSmarty.Application.Dtos
         public DateTime AddedDate { get; set; }
         public IEnumerable<string> VideoGenres { get; set; }
         public int? progress { get; set; }
-
+        public bool Premium { get; set; }
     }
 }

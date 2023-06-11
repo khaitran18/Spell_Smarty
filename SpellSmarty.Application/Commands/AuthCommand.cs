@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace SpellSmarty.Application.Commands
 {
-    public class AuthCommand : IRequest<AuthResponseDto>
+    public record AuthCommand : IRequest<AuthResponseDto>
     {
         public string UserName { get; set; }
         public string Password { get; set; }

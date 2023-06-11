@@ -16,10 +16,10 @@ namespace SpellSmarty.Infrastructure.DataModels
         public string Password { get; set; } = null!;
         public string Email { get; set; } = null!;
         public string? Name { get; set; }
-        public int Planid { get; set; } = 1;
+        public int Planid { get; set; }
         public DateTime? SubribeDate { get; set; }
         public DateTime? EndDate { get; set; }
-        public bool EmailVerify { get; set; }
+        public bool? EmailVerify { get; set; }
 
         public virtual Plan Plan { get; set; } = null!;
         public virtual ICollection<Feedback> Feedbacks { get; set; }

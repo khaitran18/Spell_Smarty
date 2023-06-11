@@ -2,16 +2,17 @@
 using Ordering.Application.Common.Exceptions;
 using SpellSmarty.Application.Commands;
 using SpellSmarty.Application.Dtos;
+using SpellSmarty.Application.Services;
 using SpellSmarty.Domain.Interfaces;
 
 namespace SpellSmarty.Application.CommandHandlers
 {
     public class AuthHandler : IRequestHandler<AuthCommand, AuthResponseDto>
     {
-        private readonly ITokenGenerator _tokenGenerator;
+        private readonly ITokenServices _tokenGenerator;
         private readonly IUnitOfWork _unitOfWork;
 
-        public AuthHandler(ITokenGenerator tokenGenerator, IUnitOfWork unitOfWork)
+        public AuthHandler(ITokenServices tokenGenerator, IUnitOfWork unitOfWork)
         {
             _tokenGenerator = tokenGenerator;
             _unitOfWork = unitOfWork;

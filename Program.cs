@@ -18,6 +18,7 @@ using System.Text;
 using SpellSmarty.Application.CommandHandlers;
 using SpellSmarty.Application.Commands;
 using SpellSmarty.Domain.Models;
+using SpellSmarty.Application.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -58,7 +59,7 @@ builder.Services.AddAuthentication(x =>
 
     };
 });
-builder.Services.AddSingleton<ITokenGenerator>(new TokenGenerator(_key, _issuer, _audience, _expirtyMinutes));
+builder.Services.AddSingleton<ITokenServices>(new TokenService(_key, _issuer, _audience, _expirtyMinutes));
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

@@ -3,11 +3,7 @@ using MediatR;
 using SpellSmarty.Application.Dtos;
 using SpellSmarty.Application.Queries;
 using SpellSmarty.Domain.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using SpellSmarty.Application.Services;
 
 namespace SpellSmarty.Application.QueryHandlers
 {
@@ -15,16 +11,21 @@ namespace SpellSmarty.Application.QueryHandlers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly ITokenServices _tokenService;
 
-        public GetSingleVideoHandler(IUnitOfWork unitOfWork, IMapper mapper)
+        public GetSingleVideoHandler(IUnitOfWork unitOfWork, IMapper mapper, ITokenServices tokenService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _tokenService = tokenService;
         }
 
         public async Task<VideoDto> Handle(GetSingleVideoQuery request, CancellationToken cancellationToken)
         {
+            //check if user is a free user from request header
+            bool freeUser = (_tokenService.ValidateToken(request.token)?.IsInRole("Free")) ?? false;
             VideoDto Dto = _mapper.Map<VideoDto>(await _unitOfWork.VideosRepository.GetVideoById(request.videoId));
+            if ((freeUser)&&(Dto.Premium)) Dto.Subtitle = "";
             return Dto;
         }
     }

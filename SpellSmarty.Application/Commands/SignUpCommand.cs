@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace SpellSmarty.Application.Commands
 {
-    public class SignUpCommand : IRequest<AccountModel>
+    public record SignUpCommand : IRequest<AccountModel>
     {
         public string Username { get; set; } = null!;
         public string Password { get; set;} = null!;

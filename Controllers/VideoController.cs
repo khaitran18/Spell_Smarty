@@ -32,9 +32,9 @@ namespace SpellSmarty.Api.Controllers
         // GET api/<VideoController>/5
         [Route("GetVideoByVideoId")]
         [HttpGet()]
-        public async Task<ActionResult> GetSingleVideo(int videoId)
+        public async Task<ActionResult> GetSingleVideo([FromHeader] string Authorization, int videoId)
         {
-            var video = await _mediator.Send(new GetSingleVideoQuery(videoId));
+            var video = await _mediator.Send(new GetSingleVideoQuery(videoId,Authorization));
             return Ok(video);
         }
 
