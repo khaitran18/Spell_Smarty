@@ -21,7 +21,7 @@ namespace SpellSmarty.Application.QueryHandlers
 
         public async Task<VideoStatDto> Handle(SaveProgressQuery request, CancellationToken cancellationToken)
         {
-            VideoStatDto listDto = _mapper.Map<VideoStatDto>(await _unitOfWork.VideoStatRepository.SaveProgress(request.statId ,request.progress));
+            VideoStatDto listDto = _mapper.Map<VideoStatDto>(await _unitOfWork.VideoStatRepository.SaveProgress(request.videoId ,request.progress));
             return listDto;
         }
     }

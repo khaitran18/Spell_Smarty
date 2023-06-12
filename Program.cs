@@ -71,6 +71,7 @@ builder.Services.AddDbContext<SpellSmartyContext>(options => options.UseSqlServe
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped(typeof(IBaseRepository<>),typeof(BaseRepository<>));
 builder.Services.AddScoped<IRequestHandler<GetVideosQuery, IEnumerable<VideoDto>>, GetVideosHandler>();
+builder.Services.AddScoped<IRequestHandler<GetVideosByGenreQuery, IEnumerable<VideoDto>>, GetVideosByGenreHandler>();
 builder.Services.AddScoped<IRequestHandler<GetVideosByUserIdQuery, IEnumerable<VideoDto>>, GetVideosByUserIdHandler>();
 builder.Services.AddScoped<IRequestHandler<GetSingleVideoQuery, VideoDto>, GetSingleVideoHandler>();
 builder.Services.AddScoped<IRequestHandler<AuthCommand, AuthResponseDto>, AuthHandler>();

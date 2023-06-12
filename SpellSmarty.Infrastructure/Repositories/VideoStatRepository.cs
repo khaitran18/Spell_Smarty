@@ -28,7 +28,7 @@ namespace SpellSmarty.Infrastructure.Repositories
         public async Task<VideoStatModel> SaveProgress(int statid, string progress)
         {
             VideoStat videoStat = _context.VideoStats
-                .Where(x => x.StatId == statid).FirstOrDefault();
+                .Where(x => x.VideoId == statid).FirstOrDefault();
 
             VideoStatModel videoStatModel = _mapper.Map<VideoStatModel>(videoStat);
             string newProgress = videoStat.Progress +" "+ progress;

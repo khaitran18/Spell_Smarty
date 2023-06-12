@@ -1,8 +1,7 @@
 ﻿using MediatR;
 using SpellSmarty.Application.Dtos;
 
-
 namespace SpellSmarty.Application.Queries
 {
-    public record SaveProgressQuery(int videoId, string progress) : IRequest<VideoStatDto>;
+    public record GetVideosByGenreQuery(int genreId) : IRequest<IEnumerable<VideoDto>>;
 }

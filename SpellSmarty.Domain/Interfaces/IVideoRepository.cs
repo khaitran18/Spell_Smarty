@@ -8,5 +8,6 @@ namespace SpellSmarty.Domain.Interfaces
         Task<VideoModel> GetVideoById(int videoid);
         Task<IEnumerable<VideoModel>> GetVideosByUserId(int userId);
         Task<IEnumerable<VideoModel>> GetVideosByCreator(string creator);
+        Task<IEnumerable<VideoModel>> GetVideoByGenre(int genreId);
     }
 }
