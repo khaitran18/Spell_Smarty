@@ -18,6 +18,8 @@ using System.Text;
 using SpellSmarty.Application.CommandHandlers;
 using SpellSmarty.Application.Commands;
 using SpellSmarty.Domain.Models;
+using SpellSmarty.Application.Services;
+using static SpellSmarty.Infrastructure.Services.MailService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -58,7 +60,7 @@ builder.Services.AddAuthentication(x =>
 
     };
 });
-builder.Services.AddSingleton<ITokenGenerator>(new TokenGenerator(_key, _issuer, _audience, _expirtyMinutes));
+builder.Services.AddSingleton<ITokenServices>(new TokenService(_key, _issuer, _audience, _expirtyMinutes));
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -74,8 +76,9 @@ builder.Services.AddScoped<IRequestHandler<AuthCommand, AuthResponseDto>, AuthHa
 builder.Services.AddScoped<IRequestHandler<GetVideosByCreatorQuery, IEnumerable<VideoDto>>, GetVideosByCreatorHandler>();
 builder.Services.AddScoped<IRequestHandler<SaveProgressQuery, VideoStatDto>, SaveProgressHandler>();
 builder.Services.AddScoped<IRequestHandler<SignUpCommand, AccountModel>, SignUpHandler>();
-
-
+builder.Services.AddScoped<IRequestHandler<VerifyAccountCommand, Task>, VerifyAccountHandler>();
+builder.Services.Configure<MailSettings>(builder.Configuration.GetSection(nameof(MailSettings)));
+builder.Services.AddTransient<IMailService, MailService>();
 
 // Register MediatR
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));

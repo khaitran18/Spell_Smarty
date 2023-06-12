@@ -27,7 +27,7 @@ namespace SpellSmarty.Infrastructure.Repositories
             var acc = _context.Accounts.FirstOrDefault(a => a.Username.Equals(username));
             if (acc != null)
             {
-                if (acc.Password.Equals(_context.Accounts.FirstOrDefault(a => a.Username.Equals(username)).Password))
+                if (acc.Password.Equals(password))
                 {
                     if (acc.EmailVerify == true)
                     {
@@ -64,15 +64,6 @@ namespace SpellSmarty.Infrastructure.Repositories
                 throw new BadRequestException("Username existed");
             }
 
-            // SEND EMAIL SERVICE HERE
-            ///////////////////////////
-            ///
-            /// 
-            /// 
-            /// 
-            /// 
-            ///////////////////////////
-            ///
             AccountModel am = new AccountModel
             {
                 Email = email,
@@ -81,12 +72,37 @@ namespace SpellSmarty.Infrastructure.Repositories
                 Username = username,
                 EmailVerify = false
             };
-            if (_context.Accounts.AddAsync(_mapper.Map<Account>(am)).IsCompletedSuccessfully)
+            Account acc = _mapper.Map<Account>(am);
+            if (_context.Accounts.AddAsync(acc).IsCompletedSuccessfully)
             {
                 _context.SaveChanges();
+                am.Id = acc.Id;
                 return am;
             }
             else throw new BadRequestException("Error in creating new account");
+        }
+
+        public async Task<bool> AddVerifyToken(int id, string verifyToken)
+        {
+            Account? a = _context.Accounts.FirstOrDefault(a => a.Id == id);
+            if (a != null) {
+                a.VerifyToken = verifyToken;
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            return false;
+        }
+
+        public async Task<bool> AddVerifyToken(int userId)
+        {
+            Account? a = _context.Accounts.FirstOrDefault(a => a.Id == userId);
+            if (a != null)
+            {
+                a.EmailVerify = true;
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            return false;
         }
     }
 }
