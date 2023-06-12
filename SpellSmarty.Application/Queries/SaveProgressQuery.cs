@@ -4,5 +4,5 @@ using SpellSmarty.Application.Dtos;
 
 namespace SpellSmarty.Application.Queries
 {
-    public record SaveProgressQuery(int statId, string progress) : IRequest<VideoStatDto>;
+    public record SaveProgressQuery(int videoId, string progress) : IRequest<VideoStatDto>;
 }

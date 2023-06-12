@@ -54,18 +54,18 @@ namespace SpellSmarty.Api.Controllers
         }
         [Route("GetVideoByUserId")]
         [HttpGet()]
-        public async Task<ActionResult> GetVideosByUserId(int userId)
+        public async Task<ActionResult> GetVideosByUserId([FromHeader] string? Authorization, int userId)
         {
-            var videos = await _mediator.Send(new GetVideosByUserIdQuery(userId));
+            var videos = await _mediator.Send(new GetVideosByUserIdQuery(Authorization, userId));
             return Ok(videos);
         }
 
         // POST api/<VideoController>
         [Route("SaveProgress")]
         [HttpPost]
-        public async Task<ActionResult> SaveProgress(int statId, string progress)
+        public async Task<ActionResult> SaveProgress(int videoId, string progress)
         {
-            var videos = await _mediator.Send(new SaveProgressQuery(statId, progress));
+            var videos = await _mediator.Send(new SaveProgressQuery(videoId, progress));
             return Ok(videos);
         }
 
