@@ -13,6 +13,7 @@ namespace SpellSmarty.Domain.Interfaces
         Task<(int userId, string UserName, string plan)> GetAccountDetailsByIdAsync(int id);
         Task<AccountModel> SignUpAsync(string username, string password, string email,string name);
         Task<bool> AddVerifyToken(int id, string verifyToken);
-        Task<bool> AddVerifyToken(int userId);
+        Task<bool> VerifyAccount(int userId);
+        public Task<bool> CheckAccountVerificationToken(string verificationToken, int? id);
     }
 }
