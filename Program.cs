@@ -20,6 +20,7 @@ using SpellSmarty.Application.Commands;
 using SpellSmarty.Domain.Models;
 using SpellSmarty.Application.Services;
 using static SpellSmarty.Infrastructure.Services.MailService;
+using SpellSmarty.Application.Common.Behaviour;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -70,6 +71,7 @@ builder.Services.AddDbContext<SpellSmartyContext>(options => options.UseSqlServe
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped(typeof(IBaseRepository<>),typeof(BaseRepository<>));
 builder.Services.AddScoped<IRequestHandler<GetVideosQuery, IEnumerable<VideoDto>>, GetVideosHandler>();
+builder.Services.AddScoped<IRequestHandler<GetVideosByGenreQuery, IEnumerable<VideoDto>>, GetVideosByGenreHandler>();
 builder.Services.AddScoped<IRequestHandler<GetVideosByUserIdQuery, IEnumerable<VideoDto>>, GetVideosByUserIdHandler>();
 builder.Services.AddScoped<IRequestHandler<GetSingleVideoQuery, VideoDto>, GetSingleVideoHandler>();
 builder.Services.AddScoped<IRequestHandler<AuthCommand, AuthResponseDto>, AuthHandler>();
@@ -79,10 +81,12 @@ builder.Services.AddScoped<IRequestHandler<SignUpCommand, AccountModel>, SignUpH
 builder.Services.AddScoped<IRequestHandler<VerifyAccountCommand, Task>, VerifyAccountHandler>();
 builder.Services.Configure<MailSettings>(builder.Configuration.GetSection(nameof(MailSettings)));
 builder.Services.AddTransient<IMailService, MailService>();
-
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<ICookieService, CookieService>();
 // Register MediatR
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
 
+builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(StoreCookieBehaviour<,>));
 
 // Configure AutoMapper
 var mapperConfig = new MapperConfiguration(cfg =>

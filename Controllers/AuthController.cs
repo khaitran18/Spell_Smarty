@@ -39,20 +39,5 @@ namespace SpellSmarty.Api.Controllers
         {
             return Ok(await _mediator.Send(command));
         }
-
-        //[HttpPost("sendmail")]
-        //public async Task<IActionResult> SendMailAsync(MailDataModel mailData)
-        //{
-        //    bool result = await _mail.SendAsync(mailData, new CancellationToken());
-
-        //    if (result)
-        //    {
-        //        return StatusCode(StatusCodes.Status200OK, "Mail has successfully been sent.");
-        //    }
-        //    else
-        //    {
-        //        return StatusCode(StatusCodes.Status500InternalServerError, "An error occured. The Mail could not be sent.");
-        //    }
-        //}
     }
 }

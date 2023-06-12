@@ -8,5 +8,5 @@ using System.Threading.Tasks;
 
 namespace SpellSmarty.Application.Queries
 {
-    public record GetVideosByUserIdQuery(int userId) : IRequest<IEnumerable<VideoDto>>;
+    public record GetVideosByUserIdQuery(string? token) : IRequest<IEnumerable<VideoDto>>;
 }

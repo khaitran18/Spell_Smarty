@@ -20,18 +20,14 @@ namespace SpellSmarty.Application.CommandHandlers
         public async Task<Task> Handle(VerifyAccountCommand request, CancellationToken cancellationToken)
         {
             string? id = _tokenServices.ValidateToken(request.verifyToken)?.FindFirst("jti")?.Value;
-            string? username = _tokenServices.ValidateToken(request.verifyToken)?.FindFirst("username")?.Value;
-            if ((id != null) && (username != null))
-            {
-                var (userId,userName,role) = await _unitOfWork.AccountRepository.GetAccountDetailsByIdAsync(int.Parse(id));
-                if (userName.Equals(username))
-                {
-                await _unitOfWork.AccountRepository.AddVerifyToken(userId);
-                    return Task.CompletedTask;
-                }
+            bool c = false;
+            if (id != null){
+                c = await _unitOfWork.AccountRepository.CheckAccountVerificationToken(request.verifyToken,int.Parse(id));
+                if (c) await _unitOfWork.AccountRepository.VerifyAccount(int.Parse(id));
                 else throw new BadRequestException("Invalid credential");
             }
             else throw new BadRequestException("Error in verifying email");
+            return Task.CompletedTask;
         }
     }
 }

@@ -93,7 +93,7 @@ namespace SpellSmarty.Infrastructure.Repositories
             return false;
         }
 
-        public async Task<bool> AddVerifyToken(int userId)
+        public async Task<bool> VerifyAccount(int userId)
         {
             Account? a = _context.Accounts.FirstOrDefault(a => a.Id == userId);
             if (a != null)
@@ -103,6 +103,25 @@ namespace SpellSmarty.Infrastructure.Repositories
                 return true;
             }
             return false;
+        }
+
+        public async Task<bool> CheckAccountVerificationToken(string verificationToken,int? id)
+        {
+            if (id == null)
+            {
+                return await Task.FromResult(false);
+            }
+            Account? a =_context.Accounts
+                .FirstOrDefault(a => a.Id==id);
+            if (a != null)
+            {
+                if (verificationToken.Equals(a.VerifyToken))
+                    return await Task.FromResult(true);
+                else
+                    return await Task.FromResult(false);
+            }
+            else 
+                return await Task.FromResult(false);
         }
     }
 }

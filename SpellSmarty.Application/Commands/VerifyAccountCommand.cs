@@ -9,6 +9,6 @@ namespace SpellSmarty.Application.Commands
 {
     public record VerifyAccountCommand : IRequest<Task>
     {
-        public string? verifyToken { get; set; }
+        public string verifyToken { get; set; }
     }
 }

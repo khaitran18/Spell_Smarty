@@ -25,18 +25,32 @@ namespace SpellSmarty.Infrastructure.Repositories
             _mapper = mapper;
         }
 
-        public async Task<VideoStatModel> SaveProgress(int statid, string progress)
+        public async Task<VideoStatModel> SaveProgress(int userId,int videoid, string progress)
         {
+            VideoStatModel videoStatModel1 = new VideoStatModel();
             VideoStat videoStat = _context.VideoStats
-                .Where(x => x.StatId == statid).FirstOrDefault();
-
+                .Where(x => x.VideoId == videoid && x.AccountId == userId).FirstOrDefault();
+            if (videoStat == null)
+            {
+                VideoStat sta = new VideoStat
+                {
+                    AccountId = userId,
+                    VideoId = videoid,
+                    Progress = progress,
+                };
+                _context.VideoStats.Add(sta);
+            }
+            else 
+            { 
             VideoStatModel videoStatModel = _mapper.Map<VideoStatModel>(videoStat);
-            videoStatModel.Progress = progress;
-            videoStat.Progress = progress;
+            string newProgress = videoStat.Progress +" "+ progress;
+            videoStatModel.Progress = newProgress;
+            videoStat.Progress = newProgress;
 
              _context.Entry(videoStat).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
-            return videoStatModel;
+            }
+                await _context.SaveChangesAsync();
+            return videoStatModel1;
         }
     }
 }
