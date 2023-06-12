@@ -47,9 +47,9 @@ namespace SpellSmarty.Api.Controllers
         }
         [Route("GetVideoByGenre")]
         [HttpGet()]
-        public async Task<ActionResult> GetVideosByGenre(int genreId)
+        public async Task<ActionResult> GetVideosByGenre(int videoId)
         {
-            var videos = await _mediator.Send(new GetVideosByGenreQuery(genreId));
+            var videos = await _mediator.Send(new GetVideosByGenreQuery(videoId));
             return Ok(videos);
         }
         [Route("GetVideoByUserId")]

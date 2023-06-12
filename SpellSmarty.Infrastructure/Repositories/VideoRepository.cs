@@ -4,6 +4,7 @@ using SpellSmarty.Domain.Interfaces;
 using SpellSmarty.Domain.Models;
 using SpellSmarty.Infrastructure.Data;
 using SpellSmarty.Infrastructure.DataModels;
+using System.Collections.Generic;
 
 namespace SpellSmarty.Infrastructure.Repositories
 {
@@ -46,15 +47,28 @@ namespace SpellSmarty.Infrastructure.Repositories
             return modelList;
         }
 
-        public async Task<IEnumerable<VideoModel>> GetVideoByGenre(int genreId)
+        public async Task<IEnumerable<VideoModel>> GetVideoByGenre(int videoId)
         {
-            IEnumerable<Video> list = await _context.Videos
-                .Include(vid => vid.VideoGenres).ThenInclude(x  => x.Genre)
-                .Where(x => x.VideoGenres.FirstOrDefault().GenreId == genreId)
-                .ToListAsync();
+            var a = _context.VideoGenres.Where(x => x.VideoId == videoId).Select(x => x.GenreId).ToList();
 
-            // map genre name into VideoModel, I dont use mapper cause it require the context to get Genre
-            List<VideoModel> modelList = new List<VideoModel>();
+            if(!a.Any())
+            {
+                return Enumerable.Empty<VideoModel>();  
+            }
+
+            List<Video> list = new List<Video>();
+            foreach (var genre in a)
+            {
+               IEnumerable<Video> videolist = await _context.Videos
+              .Include(vid => vid.VideoGenres)
+              .Where(x => x.VideoGenres.FirstOrDefault().GenreId == genre && x.Videoid != videoId)
+              .ToListAsync();
+                
+              list.AddRange(videolist);
+            }
+               
+                // map genre name into VideoModel, I dont use mapper cause it require the context to get Genre
+                List<VideoModel> modelList = new List<VideoModel>();
             foreach (var video in list)
             {
                 // mapping video(List<int> videoGenre) to a model(List<string> videoGenre)
