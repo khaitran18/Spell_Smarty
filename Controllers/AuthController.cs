@@ -2,6 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using SpellSmarty.Application.Commands;
 using SpellSmarty.Application.Dtos;
+using SpellSmarty.Application.Services;
+using SpellSmarty.Domain.Models;
+using SpellSmarty.Infrastructure.Services;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -12,10 +15,12 @@ namespace SpellSmarty.Api.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IMediator _mediator;
+        private readonly IMailService _mail;
 
-        public AuthController(IMediator mediator)
+        public AuthController(IMediator mediator,IMailService mail)
         {
             _mediator = mediator;
+            _mail= mail;
         }
 
         [HttpPost("login")]
@@ -26,6 +31,11 @@ namespace SpellSmarty.Api.Controllers
         }
         [HttpPost("signup")]
         public async Task<IActionResult> Signup([FromBody] SignUpCommand command)
+        {
+            return Ok(await _mediator.Send(command));
+        }
+        [HttpPost("verify")]
+        public async Task<IActionResult> Verify([FromBody] VerifyAccountCommand command)
         {
             return Ok(await _mediator.Send(command));
         }

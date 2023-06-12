@@ -31,8 +31,9 @@ namespace SpellSmarty.Infrastructure.Repositories
                 .Where(x => x.StatId == statid).FirstOrDefault();
 
             VideoStatModel videoStatModel = _mapper.Map<VideoStatModel>(videoStat);
-            videoStatModel.Progress = progress;
-            videoStat.Progress = progress;
+            string newProgress = videoStat.Progress +" "+ progress;
+            videoStatModel.Progress = newProgress;
+            videoStat.Progress = newProgress;
 
              _context.Entry(videoStat).State = EntityState.Modified;
             await _context.SaveChangesAsync();

@@ -11,7 +11,6 @@ namespace SpellSmarty.Infrastructure
         private readonly IMapper _mapper;
         private IVideoRepository _videoRepository;
         private IAccountRepository _accountRepository;
-
         private IVideoStatRepository _videoStatRepository;
         public UnitOfWork(SpellSmartyContext context, IMapper mapper)
         {

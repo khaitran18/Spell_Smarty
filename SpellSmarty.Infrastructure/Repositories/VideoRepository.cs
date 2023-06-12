@@ -140,7 +140,6 @@ namespace SpellSmarty.Infrastructure.Repositories
                 videoModel.VideoGenres = genreNames;
                 modelList.Add(videoModel);
             }
-
             return modelList;
         }
     }

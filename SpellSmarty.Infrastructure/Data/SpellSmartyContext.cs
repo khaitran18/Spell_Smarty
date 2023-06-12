@@ -10,14 +10,14 @@ namespace SpellSmarty.Infrastructure.Data
     public partial class SpellSmartyContext : DbContext
     {
         private readonly IConfiguration _configuration;
-        public SpellSmartyContext()
-        {
-        }
 
-        public SpellSmartyContext(DbContextOptions<SpellSmartyContext> options,IConfiguration configuration)
-            : base(options)
+        public SpellSmartyContext(DbContextOptions options,IConfiguration configuration) : base(options)
         {
             _configuration = configuration;
+        }
+
+        protected SpellSmartyContext()
+        {
         }
 
         public virtual DbSet<Account> Accounts { get; set; } = null!;
@@ -73,6 +73,11 @@ namespace SpellSmarty.Infrastructure.Data
                 entity.Property(e => e.Username)
                     .HasMaxLength(255)
                     .HasColumnName("username");
+
+                entity.Property(e => e.VerifyToken)
+                    .HasMaxLength(500)
+                    .HasColumnName("verifyToken")
+                    .IsFixedLength();
 
                 entity.HasOne(d => d.Plan)
                     .WithMany(p => p.Accounts)
@@ -149,6 +154,8 @@ namespace SpellSmarty.Infrastructure.Data
 
                 entity.Property(e => e.Level).HasColumnName("level");
 
+                entity.Property(e => e.Premium).HasColumnName("premium");
+
                 entity.Property(e => e.Rating).HasColumnName("rating");
 
                 entity.Property(e => e.SrcId)
@@ -173,7 +180,7 @@ namespace SpellSmarty.Infrastructure.Data
                     .WithMany(p => p.Videos)
                     .HasForeignKey(d => d.Level)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Videos__level__534D60F1");
+                    .HasConstraintName("FK__Videos__level__6EF57B66");
             });
 
             modelBuilder.Entity<VideoGenre>(entity =>
@@ -190,7 +197,7 @@ namespace SpellSmarty.Infrastructure.Data
                     .WithMany(p => p.VideoGenres)
                     .HasForeignKey(d => d.GenreId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__VideoGenr__genre__3C69FB99");
+                    .HasConstraintName("FK__VideoGenr__genre__6D0D32F4");
 
                 entity.HasOne(d => d.Video)
                     .WithMany(p => p.VideoGenres)

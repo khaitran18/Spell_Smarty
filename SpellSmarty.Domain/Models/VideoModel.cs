@@ -21,6 +21,7 @@ namespace SpellSmarty.Domain.Models
         public DateTime AddedDate { get; set; }
         public IEnumerable<string> VideoGenres { get; set; }
         public string? progress { get; set; }
+        public bool Premium { get; set; }
 
     }
 }
