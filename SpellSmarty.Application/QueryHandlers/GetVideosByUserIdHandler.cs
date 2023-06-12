@@ -27,16 +27,9 @@ namespace SpellSmarty.Application.QueryHandlers
 
         public async Task<IEnumerable<VideoDto>> Handle(GetVideosByUserIdQuery request, CancellationToken cancellationToken)
         {
-            bool freeUser;
-            if (request.token == null)
-            {
-                freeUser = true;
-            }
-            else
-            {
-                freeUser = (_tokenService.ValidateToken(request.token)?.IsInRole("Free")) ?? false;
-            }
-            List<VideoDto> listDto = _mapper.Map<List<VideoDto>>(await _unitOfWork.VideosRepository.GetVideosByUserId(request.userId));
+            string? id = _tokenService.ValidateToken(request.token)?.FindFirst("jti")?.Value;
+            int userId = int.Parse(id);
+            List<VideoDto> listDto = _mapper.Map<List<VideoDto>>(await _unitOfWork.VideosRepository.GetVideosByUserId(userId));
             return listDto;
         }
     }
