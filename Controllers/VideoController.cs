@@ -45,7 +45,13 @@ namespace SpellSmarty.Api.Controllers
             var video = await _mediator.Send(new GetVideosByCreatorQuery(creator));
             return Ok(video);
         }
-
+        [Route("GetVideoByGenre")]
+        [HttpGet()]
+        public async Task<ActionResult> GetVideosByGenre(int genreId)
+        {
+            var videos = await _mediator.Send(new GetVideosByGenreQuery(genreId));
+            return Ok(videos);
+        }
         [Route("GetVideoByUserId")]
         [HttpGet()]
         public async Task<ActionResult> GetVideosByUserId(int userId)
