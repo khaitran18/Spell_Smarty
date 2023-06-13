@@ -65,8 +65,8 @@ namespace SpellSmarty.Api.Controllers
         [HttpPost]
         public async Task<ActionResult> SaveProgress([FromHeader] string? Authorization, int videoId, string progress)
         {
-            var videos = await _mediator.Send(new SaveProgressQuery(Authorization, videoId, progress));
-            return Ok(videos);
+            string returnPrg = await _mediator.Send(new SaveProgressQuery(Authorization, videoId, progress));
+            return Ok(returnPrg);
         }
 
         // PUT api/<VideoController>/5

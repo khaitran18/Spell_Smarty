@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Ordering.Application.Common.Exceptions;
 using SpellSmarty.Application.Dtos;
 using SpellSmarty.Domain.Interfaces;
 using SpellSmarty.Domain.Models;
@@ -27,30 +28,39 @@ namespace SpellSmarty.Infrastructure.Repositories
 
         public async Task<VideoStatModel> SaveProgress(int userId,int videoid, string progress)
         {
-            VideoStatModel videoStatModel1 = new VideoStatModel();
+            VideoStatModel videoStatModel = new VideoStatModel();
             VideoStat videoStat = _context.VideoStats
                 .Where(x => x.VideoId == videoid && x.AccountId == userId).FirstOrDefault();
+            //if new videoStat
             if (videoStat == null)
             {
                 VideoStat sta = new VideoStat
                 {
                     AccountId = userId,
                     VideoId = videoid,
-                    Progress = progress,
+                    Progress = progress
                 };
                 _context.VideoStats.Add(sta);
             }
             else 
-            { 
-            VideoStatModel videoStatModel = _mapper.Map<VideoStatModel>(videoStat);
-            string newProgress = videoStat.Progress +" "+ progress;
-            videoStatModel.Progress = newProgress;
-            videoStat.Progress = newProgress;
-
-             _context.Entry(videoStat).State = EntityState.Modified;
+            {
+            videoStatModel = _mapper.Map<VideoStatModel>(videoStat);
+                if (existProgress(videoStat.Progress, progress))
+                {
+                    string newProgress = videoStat.Progress + " " + progress;
+                    videoStatModel.Progress = newProgress;
+                    videoStat.Progress = newProgress;
+                    _context.Entry(videoStat).State = EntityState.Modified;
+                }
+                else throw new BadRequestException("Wrong progress type");
             }
-                await _context.SaveChangesAsync();
-            return videoStatModel1;
+            await _context.SaveChangesAsync();
+            return videoStatModel;
+        }
+        private bool existProgress(string prg, string added)
+        {
+            if (prg.Contains(added)) return false;
+            else return true;
         }
     }
 }
