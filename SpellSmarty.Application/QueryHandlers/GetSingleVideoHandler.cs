@@ -4,6 +4,7 @@ using SpellSmarty.Application.Dtos;
 using SpellSmarty.Application.Queries;
 using SpellSmarty.Domain.Interfaces;
 using SpellSmarty.Application.Services;
+using System.Security.Claims;
 
 namespace SpellSmarty.Application.QueryHandlers
 {
@@ -22,15 +23,31 @@ namespace SpellSmarty.Application.QueryHandlers
 
         public async Task<VideoDto> Handle(GetSingleVideoQuery request, CancellationToken cancellationToken)
         {
+            //check the user is in which role
             bool freeUser;
+            ClaimsPrincipal claim = null;
             if (request.token == null) {
                 freeUser = true;
             }
             else
             {
-                freeUser = (_tokenService.ValidateToken(request.token)?.IsInRole("Free")) ?? false;
+                claim = _tokenService.ValidateToken(request.token);
+                freeUser = (claim?.IsInRole("Free")) ?? false;
             }
+
+            // Get video with Genre and Level
             VideoDto Dto = _mapper.Map<VideoDto>(await _unitOfWork.VideosRepository.GetVideoById(request.videoId));
+
+            //Get progress if there is
+            if (claim != null)
+            {
+                int accountId = int.Parse(claim.FindFirst("jti").Value);
+                string? progress = await _unitOfWork.VideoStatRepository
+                    .GetProgressByUserIdAndVideoId(accountId, request.videoId);
+                Dto.progress = progress;
+            }
+            
+            // if free user, cant see premium subtitle
             if ((freeUser)&&(Dto.Premium)) Dto.Subtitle = null;
             return Dto;
         }

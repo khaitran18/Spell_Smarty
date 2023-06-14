@@ -50,12 +50,5 @@ namespace SpellSmarty.Application.QueryHandlers
                 return false;
             }
         }
-        //public async Task<VideoStatDto> Handle(SaveProgressQuery request, CancellationToken cancellationToken)
-        //{
-        //    string? id = _tokenService.ValidateToken(request.token)?.FindFirst("jti")?.Value;
-        //    int userId = int.Parse(id);
-        //    VideoStatDto listDto = _mapper.Map<VideoStatDto>(await _unitOfWork.VideoStatRepository.SaveProgress(userId,request.videoId ,request.progress));
-        //    return listDto;
-        //}
     }
 }

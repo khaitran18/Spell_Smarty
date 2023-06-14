@@ -86,6 +86,7 @@ builder.Services.AddScoped<ICookieService, CookieService>();
 // Register MediatR
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
 
+// Register behaviour for pipeline
 builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(StoreCookieBehaviour<,>));
 
 // Configure AutoMapper

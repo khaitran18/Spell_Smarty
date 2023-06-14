@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Ordering.Application.Common.Exceptions;
 using SpellSmarty.Domain.Interfaces;
 using SpellSmarty.Domain.Models;
 using SpellSmarty.Infrastructure.Data;
@@ -89,19 +90,29 @@ namespace SpellSmarty.Infrastructure.Repositories
 
         public async Task<VideoModel> GetVideoById(int videoid)
         {
-            Video video = _context.Videos
+            try
+            {
+                Video? video = _context.Videos
                 .Include(x => x.VideoGenres)
                 .Include(x => x.LevelNavigation)
-                .Where(x => x.Videoid == videoid).FirstOrDefault();
-
-            VideoModel videoModel = _mapper.Map<VideoModel>(video);
-            var genreNames = video.VideoGenres.Join(_context.Genres
-                    , vd => vd.GenreId
-                    , genre => genre.GenreId
-                    , (name, genre) => genre.GenreName
-                    );
-            videoModel.VideoGenres = genreNames;
-            return videoModel;
+                .FirstOrDefault(x => x.Videoid == videoid);
+                if (video != null)
+                {
+                    VideoModel videoModel = _mapper.Map<VideoModel>(video);
+                    var genreNames = video.VideoGenres.Join(_context.Genres
+                            , vd => vd.GenreId
+                            , genre => genre.GenreId
+                            , (name, genre) => genre.GenreName
+                            );
+                    videoModel.VideoGenres = genreNames;
+                    return videoModel;
+                }
+                else throw new NotFoundException("Video not found");
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
         }
 
         public async Task<IEnumerable<VideoModel>> GetVideosByCreator(int videoId)
