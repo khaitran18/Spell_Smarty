@@ -26,7 +26,7 @@ namespace SpellSmarty.Application.CommandHandlers
 
             await _unitOfWork.AccountRepository.AddVerifyToken(c.Id,verifyToken);
 
-            string verifyLink = "https://spellsmarty.vercel.app/verify/" + verifyToken;
+            string verifyLink = "https://spellsmarty.com/verify/" + verifyToken;
             await _mailService.SendAsync(
                 new MailDataModel
                 {
