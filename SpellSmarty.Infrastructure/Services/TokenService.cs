@@ -49,6 +49,7 @@ namespace SpellSmarty.Infrastructure.Services
         }
         public ClaimsPrincipal ValidateToken(string jwtToken)
         {
+            jwtToken = jwtToken.Trim();
             // token now include bearer, we dont need bearer
             var index = jwtToken.IndexOf(" ");
             if (index != -1)

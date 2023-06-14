@@ -30,18 +30,5 @@ namespace SpellSmarty.Application.QueryHandlers
                 VideoStatDto dto = _mapper.Map<VideoStatDto>(model);
                 return dto.progress;
         }
-
-        private bool isNumber(string str)
-        {
-            try
-            {
-                int.Parse(str);
-                return true;
-            }
-            catch (Exception e)
-            {
-                return false;
-            }
-        }
     }
 }

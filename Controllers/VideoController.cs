@@ -68,5 +68,42 @@ namespace SpellSmarty.Api.Controllers
             string returnPrg = await _mediator.Send(new SaveProgressQuery(Authorization, videoId, progress));
             return Ok(returnPrg);
         }
+
+        [Route("CreateGenre")]
+        [HttpPost]
+        public async Task<ActionResult> CreateGenre(string genreName)
+        {
+            var returnGenre = await _mediator.Send(new AddGenreQuery(genreName));
+            return Ok(returnGenre);
+        }
+
+        [Route("CreateNewVideo")]
+        [HttpPost]
+        public async Task<ActionResult> CreateVideo(float? rating,
+                                                    string subtitle,
+                                                    string? thumbnaillink,
+                                                    string? channelname,
+                                                    string srcid,
+                                                    string title,
+                                                    int learntcount,
+                                                    string description,
+                                                    int level,
+                                                    bool premium)
+        {
+            var returnGenre = await _mediator.Send(new AddVideoQuery(rating, subtitle, thumbnaillink, channelname, srcid, title, learntcount, description, level, premium));
+            return Ok(returnGenre);
+        }
+
+        // PUT api/<VideoController>/5
+        [HttpPut("{id}")]
+        public void Put(int id, [FromBody] string value)
+        {
+        }
+
+        // DELETE api/<VideoController>/5
+        [HttpDelete("{id}")]
+        public void Delete(int id)
+        {
+        }
     }
 }
