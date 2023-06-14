@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using SpellSmarty.Application.Commands;
 using SpellSmarty.Application.Queries;
 
 namespace SpellSmarty.Api.Controllers
@@ -28,6 +29,22 @@ namespace SpellSmarty.Api.Controllers
             {
                 Console.WriteLine(ex.Message);
                return StatusCode(500);
+            }
+
+        }
+
+        [HttpPut]
+        public async Task<ActionResult> UpgradePremium([FromBody] UpgradePremiumCommand command)
+        {
+            try
+            {
+                var check = await _mediator.Send(command);
+                return Ok(check);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return StatusCode(500);
             }
 
         }

@@ -82,6 +82,7 @@ builder.Services.AddScoped<IRequestHandler<SaveProgressQuery, string>, SaveProgr
 builder.Services.AddScoped<IRequestHandler<SignUpCommand, AccountModel>, SignUpHandler>();
 builder.Services.AddScoped<IRequestHandler<VerifyAccountCommand, Task>, VerifyAccountHandler>();
 
+builder.Services.AddScoped<IRequestHandler<UpgradePremiumCommand, AccountModel>, UpgradePremiumHandler>();
 builder.Services.AddScoped<IRequestHandler<GetAllUserQuery, IEnumerable<AccountModel>>, GetAllUserHandler>();
 
 
