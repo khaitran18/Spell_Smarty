@@ -21,6 +21,7 @@ using SpellSmarty.Domain.Models;
 using SpellSmarty.Application.Services;
 using static SpellSmarty.Infrastructure.Services.MailService;
 using SpellSmarty.Application.Common.Behaviour;
+using SpellSmarty.Application.Common.Dtos;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -79,6 +80,10 @@ builder.Services.AddScoped<IRequestHandler<GetVideosByCreatorQuery, IEnumerable<
 builder.Services.AddScoped<IRequestHandler<SaveProgressQuery, string>, SaveProgressHandler>();
 builder.Services.AddScoped<IRequestHandler<SignUpCommand, AccountModel>, SignUpHandler>();
 builder.Services.AddScoped<IRequestHandler<VerifyAccountCommand, Task>, VerifyAccountHandler>();
+
+builder.Services.AddScoped<IRequestHandler<GetAllUserQuery, IEnumerable<AccountModel>>, GetAllUserHandler>();
+
+
 builder.Services.Configure<MailSettings>(builder.Configuration.GetSection(nameof(MailSettings)));
 builder.Services.AddTransient<IMailService, MailService>();
 builder.Services.AddHttpContextAccessor();

@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using Ordering.Application.Common.Exceptions;
+using SpellSmarty.Application.Common.Dtos;
 using SpellSmarty.Domain.Interfaces;
 using SpellSmarty.Domain.Models;
 using SpellSmarty.Infrastructure.Data;
@@ -122,6 +124,21 @@ namespace SpellSmarty.Infrastructure.Repositories
             }
             else 
                 return await Task.FromResult(false);
+        }
+
+        public async Task<IEnumerable<AccountModel>?> GetAllAccountsAsync()
+        {
+            var accountList = new List<AccountModel>();
+            try
+            {
+                accountList = _mapper.Map(await _context.Accounts.Include(a => a.Plan).ToListAsync(), accountList);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            return accountList;
         }
     }
 }
