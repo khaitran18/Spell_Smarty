@@ -115,7 +115,7 @@ namespace SpellSmarty.Infrastructure.Repositories
                 .FirstOrDefault(a => a.Id==id);
             if (a != null)
             {
-                if (verificationToken.Equals(a.VerifyToken))
+                if (verificationToken.Equals(a.VerifyToken.Trim()))
                     return await Task.FromResult(true);
                 else
                     return await Task.FromResult(false);
