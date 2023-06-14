@@ -34,7 +34,7 @@ namespace SpellSmarty.Infrastructure.Repositories
                 .Progress);
         }
 
-        public async Task<VideoStatModel> SaveProgress(int userId,int videoid, string progress)
+        public async Task<VideoStatModel> SaveProgress(int userId,int videoid, int progress)
         {
             VideoStatModel videoStatModel = new VideoStatModel();
             VideoStat videoStat = _context.VideoStats
@@ -46,7 +46,7 @@ namespace SpellSmarty.Infrastructure.Repositories
                 {
                     AccountId = userId,
                     VideoId = videoid,
-                    Progress = progress
+                    Progress = progress.ToString()
                 };
                 _context.VideoStats.Add(sta);
             }
@@ -60,14 +60,14 @@ namespace SpellSmarty.Infrastructure.Repositories
                     videoStat.Progress = newProgress;
                     _context.Entry(videoStat).State = EntityState.Modified;
                 }
-                else throw new BadRequestException("Wrong progress type");
+                else throw new BadRequestException("Progress existed");
             }
             await _context.SaveChangesAsync();
             return videoStatModel;
         }
-        private bool existProgress(string prg, string added)
+        private bool existProgress(string prg, int added)
         {
-            if (prg.Contains(added)) return false;
+            if (prg.Contains(added.ToString())) return false;
             else return true;
         }
     }

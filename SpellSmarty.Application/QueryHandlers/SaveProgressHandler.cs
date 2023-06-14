@@ -24,31 +24,11 @@ namespace SpellSmarty.Application.QueryHandlers
 
         public async Task<string> Handle(SaveProgressQuery request, CancellationToken cancellationToken)
         {
-            if (isNumber(request.progress))
-            {
                 string? id = _tokenService.ValidateToken(request.token)?.FindFirst("jti")?.Value;
                 int userId = int.Parse(id);
                 VideoStatModel model = await _unitOfWork.VideoStatRepository.SaveProgress(userId, request.videoId, request.progress);
                 VideoStatDto dto = _mapper.Map<VideoStatDto>(model);
                 return dto.progress;
-            }
-            else
-            {
-                throw new BadRequestException("Wrong progress type");
-            }
-        }
-
-        private bool isNumber(string str)
-        {
-            try
-            {
-                int.Parse(str);
-                return true;
-            }
-            catch (Exception e)
-            {
-                return false;
-            }
         }
     }
 }

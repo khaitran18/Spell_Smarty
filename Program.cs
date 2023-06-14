@@ -21,6 +21,8 @@ using SpellSmarty.Domain.Models;
 using SpellSmarty.Application.Services;
 using static SpellSmarty.Infrastructure.Services.MailService;
 using SpellSmarty.Application.Common.Behaviour;
+using FluentValidation;
+using SpellSmarty.Application.Common.Validation;
 using SpellSmarty.Application.Common.Dtos;
 using SpellSmarty.Application.Common.Mappings;
 
@@ -83,6 +85,10 @@ builder.Services.AddScoped<IRequestHandler<AddGenreQuery, GenreDto>, AddGenreHan
 builder.Services.AddScoped<IRequestHandler<AddVideoQuery, VideoDto>, AddVideoHandler>();
 builder.Services.AddScoped<IRequestHandler<SignUpCommand, AccountModel>, SignUpHandler>();
 builder.Services.AddScoped<IRequestHandler<VerifyAccountCommand, Task>, VerifyAccountHandler>();
+
+builder.Services.AddScoped<IRequestHandler<GetAllUserQuery, IEnumerable<AccountModel>>, GetAllUserHandler>();
+
+
 builder.Services.Configure<MailSettings>(builder.Configuration.GetSection(nameof(MailSettings)));
 builder.Services.AddTransient<IMailService, MailService>();
 builder.Services.AddHttpContextAccessor();
@@ -90,8 +96,13 @@ builder.Services.AddScoped<ICookieService, CookieService>();
 // Register MediatR
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
 
+// Add validator
+builder.Services.AddScoped<IValidator<AuthCommand>, AuthCommandValidator>();
+builder.Services.AddScoped<IValidator<SaveProgressQuery>, SaveProgressCommandValidator>();
+
 // Register behaviour for pipeline
 builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(StoreCookieBehaviour<,>));
+builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 
 // Configure AutoMapper
 var mapperConfig = new MapperConfiguration(cfg =>
