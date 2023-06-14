@@ -8,5 +8,5 @@ using System.Threading.Tasks;
 
 namespace SpellSmarty.Application.Queries
 {
-    public record GetVideosByCreatorQuery(string creator) : IRequest<IEnumerable<VideoDto>>;
+    public record GetVideosByCreatorQuery(int videoId) : IRequest<IEnumerable<VideoDto>>;
 }

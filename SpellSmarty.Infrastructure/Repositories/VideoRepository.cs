@@ -104,17 +104,21 @@ namespace SpellSmarty.Infrastructure.Repositories
             return videoModel;
         }
 
-        public async Task<IEnumerable<VideoModel>> GetVideosByCreator(string creator)
+        public async Task<IEnumerable<VideoModel>> GetVideosByCreator(int videoId)
         {
-            IEnumerable<Video> list = await _context.Videos
+            var creator = _context.Videos
                 .Include(vid => vid.LevelNavigation)
                 .Include(vid => vid.VideoGenres)
-                .Where(x => x.ChannelName == creator)
-                .ToListAsync();
+                .Where(x => x.Videoid == videoId)
+                .Select(x => x.ChannelName).First();
 
-            // map genre name into VideoModel, I dont use mapper cause it require the context to get Genre
+            IEnumerable<Video> videolist = await _context.Videos
+             .Include(vid => vid.VideoGenres)
+             .Where(x => x.ChannelName == creator && x.Videoid != videoId)
+             .ToListAsync();
+
             List<VideoModel> modelList = new List<VideoModel>();
-            foreach (var video in list)
+            foreach (var video in videolist)
             {
                 // mapping video(List<int> videoGenre) to a model(List<string> videoGenre)
                 VideoModel videoModel = _mapper.Map<VideoModel>(video);
@@ -128,6 +132,7 @@ namespace SpellSmarty.Infrastructure.Repositories
                 videoModel.VideoGenres = genreNames;
                 modelList.Add(videoModel);
             }
+
 
             return modelList;
         }
