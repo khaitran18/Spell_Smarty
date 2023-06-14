@@ -21,8 +21,11 @@ namespace SpellSmarty.Application.CommandHandlers
         public async Task<AccountModel> Handle(SignUpCommand request, CancellationToken cancellationToken)
         {
             AccountModel c = await _unitOfWork.AccountRepository.SignUpAsync(request.Username, request.Password, request.Email, request.Name);
+
             string verifyToken = _tokenServices.GenerateJWTToken((userId:c.Id, userName: c.Username, roles:c.Password));
+
             await _unitOfWork.AccountRepository.AddVerifyToken(c.Id,verifyToken);
+
             string verifyLink = "https://spellsmarty.vercel.app/verify/" + verifyToken;
             await _mailService.SendAsync(
                 new MailDataModel

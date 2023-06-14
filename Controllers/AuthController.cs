@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Ordering.Application.Common.Exceptions;
 using SpellSmarty.Application.Commands;
 using SpellSmarty.Application.Dtos;
 using SpellSmarty.Application.Services;
@@ -15,16 +16,15 @@ namespace SpellSmarty.Api.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IMediator _mediator;
-        private readonly IMailService _mail;
 
-        public AuthController(IMediator mediator,IMailService mail)
+        public AuthController(IMediator mediator)
         {
             _mediator = mediator;
-            _mail= mail;
         }
 
         [HttpPost("login")]
         [ProducesDefaultResponseType(typeof(AuthResponseDto))]
+        [ProducesErrorResponseType(typeof(BadHttpRequestException))]
         public async Task<IActionResult> Login([FromBody] AuthCommand command)
         {
             return Ok(await _mediator.Send(command));
