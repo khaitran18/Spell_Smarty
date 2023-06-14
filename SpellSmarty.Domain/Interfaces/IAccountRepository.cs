@@ -15,5 +15,6 @@ namespace SpellSmarty.Domain.Interfaces
         Task<bool> AddVerifyToken(int id, string verifyToken);
         Task<bool> VerifyAccount(int userId);
         public Task<bool> CheckAccountVerificationToken(string verificationToken, int? id);
+        public Task<IEnumerable<AccountModel>?> GetAllAccountsAsync();
     }
 }
