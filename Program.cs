@@ -21,6 +21,8 @@ using SpellSmarty.Domain.Models;
 using SpellSmarty.Application.Services;
 using static SpellSmarty.Infrastructure.Services.MailService;
 using SpellSmarty.Application.Common.Behaviour;
+using FluentValidation;
+using SpellSmarty.Application.Common.Validation;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -86,8 +88,12 @@ builder.Services.AddScoped<ICookieService, CookieService>();
 // Register MediatR
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
 
+// Add validator
+builder.Services.AddScoped<IValidator<AuthCommand>, AuthCommandValidator>();
+
 // Register behaviour for pipeline
 builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(StoreCookieBehaviour<,>));
+builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 
 // Configure AutoMapper
 var mapperConfig = new MapperConfiguration(cfg =>
