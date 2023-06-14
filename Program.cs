@@ -90,6 +90,7 @@ builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.Get
 
 // Add validator
 builder.Services.AddScoped<IValidator<AuthCommand>, AuthCommandValidator>();
+builder.Services.AddScoped<IValidator<SaveProgressQuery>, SaveProgressCommandValidator>();
 
 // Register behaviour for pipeline
 builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(StoreCookieBehaviour<,>));

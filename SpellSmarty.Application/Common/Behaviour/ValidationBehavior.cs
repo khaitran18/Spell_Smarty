@@ -26,7 +26,7 @@ namespace SpellSmarty.Application.Common.Behaviour
             if (validationFailures.Any())
             {
                 var error = string.Join("\r\n", validationFailures);
-                throw new BadRequestException(error);
+                throw new FluentValidation.ValidationException(error);
             }
 
             return next();

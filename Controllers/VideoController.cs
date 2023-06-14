@@ -63,22 +63,10 @@ namespace SpellSmarty.Api.Controllers
         // POST api/<VideoController>
         [Route("SaveProgress")]
         [HttpPost]
-        public async Task<ActionResult> SaveProgress([FromHeader] string? Authorization, int videoId, string progress)
+        public async Task<ActionResult> SaveProgress([FromHeader] string? Authorization, int videoId, int progress)
         {
             string returnPrg = await _mediator.Send(new SaveProgressQuery(Authorization, videoId, progress));
             return Ok(returnPrg);
-        }
-
-        // PUT api/<VideoController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/<VideoController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
         }
     }
 }

@@ -10,7 +10,7 @@ namespace SpellSmarty.Domain.Interfaces
 {
     public interface IVideoStatRepository : IBaseRepository<VideoStatModel>
     {
-        Task<VideoStatModel> SaveProgress(int userId, int statid, string progress);
+        Task<VideoStatModel> SaveProgress(int userId, int statid, int progress);
         Task<string> GetProgressByUserIdAndVideoId(int userId, int videoId);
     }
 }
