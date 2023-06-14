@@ -9,5 +9,15 @@ namespace SpellSmarty.Domain.Interfaces
         Task<IEnumerable<VideoModel>> GetVideosByUserId(int userId);
         Task<IEnumerable<VideoModel>> GetVideosByCreator(int videoId);
         Task<IEnumerable<VideoModel>> GetVideoByGenre(int videoId);
+        Task<VideoModel> SaveVideo(float? rating,
+                                string subtitle,
+                                string? thumbnaillink,
+                                string? channelname,
+                                string srcid,
+                                string title,
+                                int learntcount,
+                                string description,
+                                int level,
+                                bool premium);
     }
 }
