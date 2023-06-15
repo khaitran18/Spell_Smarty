@@ -85,9 +85,9 @@ builder.Services.AddScoped<IRequestHandler<AddGenreQuery, GenreDto>, AddGenreHan
 builder.Services.AddScoped<IRequestHandler<AddVideoQuery, VideoDto>, AddVideoHandler>();
 builder.Services.AddScoped<IRequestHandler<SignUpCommand, AccountModel>, SignUpHandler>();
 builder.Services.AddScoped<IRequestHandler<VerifyAccountCommand, Task>, VerifyAccountHandler>();
-
 builder.Services.AddScoped<IRequestHandler<UpgradePremiumCommand, AccountModel>, UpgradePremiumHandler>();
 builder.Services.AddScoped<IRequestHandler<GetAllUserQuery, IEnumerable<AccountModel>>, GetAllUserHandler>();
+builder.Services.AddScoped<IRequestHandler<LogoutCommand, bool>, LogoutHandler>();
 
 
 builder.Services.Configure<MailSettings>(builder.Configuration.GetSection(nameof(MailSettings)));
