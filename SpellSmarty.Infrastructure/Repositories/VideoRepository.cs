@@ -172,5 +172,27 @@ namespace SpellSmarty.Infrastructure.Repositories
             }
             return modelList;
         }
+
+        public async Task<VideoModel> SaveVideo(float? rating, string subtitle, string? thumbnaillink, string? channelname, string srcid, string title, int learntcount, string description, int level, bool premium)
+        {
+            Video video = new Video
+            {
+                Rating = rating,
+                Subtitle = subtitle,
+                ThumbnailLink = thumbnaillink,
+                ChannelName = channelname,
+                SrcId = srcid,
+                Title = title,
+                LearntCount = learntcount,
+                VideoDescription = description,
+                Level = level,
+                Premium = premium,
+                AddedDate = DateTime.Now,
+            };
+            _context.Videos.Add(video);
+            VideoModel videomodel = _mapper.Map<VideoModel>(video);
+            await _context.SaveChangesAsync();
+            return videomodel;
+        }
     }
 }

@@ -39,5 +39,11 @@ namespace SpellSmarty.Api.Controllers
         {
             return Ok(await _mediator.Send(command));
         }
+        [HttpPost("logout")]
+        public async Task<IActionResult> Logout(LogoutCommand command)
+        {
+            return Ok(await _mediator.Send(command));
+        }
+
     }
 }

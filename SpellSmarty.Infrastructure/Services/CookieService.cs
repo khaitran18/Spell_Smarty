@@ -16,6 +16,25 @@ namespace SpellSmarty.Infrastructure.Services
         {
             _httpContextAccessor = httpContextAccessor;
         }
+
+        public bool DeleteCookie(string key)
+        {
+            try
+            {
+                var httpContext = _httpContextAccessor.HttpContext;
+                if (httpContext != null)
+                {
+                    httpContext.Response.Cookies.Delete(key);
+                    return true;
+                }
+                else return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
         public async void WriteCookie(string key, string value, int? expirationDays = null)
         {
             var httpContext = _httpContextAccessor.HttpContext;

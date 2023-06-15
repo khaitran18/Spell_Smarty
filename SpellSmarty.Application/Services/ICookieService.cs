@@ -9,5 +9,6 @@ namespace SpellSmarty.Application.Services
     public interface ICookieService
     {
         public void WriteCookie(string key, string value, int? expirationDays = null);
+        public bool DeleteCookie(string key);
     }
 }

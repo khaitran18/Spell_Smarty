@@ -23,6 +23,8 @@ using static SpellSmarty.Infrastructure.Services.MailService;
 using SpellSmarty.Application.Common.Behaviour;
 using FluentValidation;
 using SpellSmarty.Application.Common.Validation;
+using SpellSmarty.Application.Common.Dtos;
+using SpellSmarty.Application.Common.Mappings;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -79,10 +81,13 @@ builder.Services.AddScoped<IRequestHandler<GetSingleVideoQuery, VideoDto>, GetSi
 builder.Services.AddScoped<IRequestHandler<AuthCommand, AuthResponseDto>, AuthHandler>();
 builder.Services.AddScoped<IRequestHandler<GetVideosByCreatorQuery, IEnumerable<VideoDto>>, GetVideosByCreatorHandler>();
 builder.Services.AddScoped<IRequestHandler<SaveProgressQuery, string>, SaveProgressHandler>();
+builder.Services.AddScoped<IRequestHandler<AddGenreQuery, GenreDto>, AddGenreHandler>();
+builder.Services.AddScoped<IRequestHandler<AddVideoQuery, VideoDto>, AddVideoHandler>();
 builder.Services.AddScoped<IRequestHandler<SignUpCommand, AccountModel>, SignUpHandler>();
 builder.Services.AddScoped<IRequestHandler<VerifyAccountCommand, Task>, VerifyAccountHandler>();
-
+builder.Services.AddScoped<IRequestHandler<UpgradePremiumCommand, AccountModel>, UpgradePremiumHandler>();
 builder.Services.AddScoped<IRequestHandler<GetAllUserQuery, IEnumerable<AccountModel>>, GetAllUserHandler>();
+builder.Services.AddScoped<IRequestHandler<LogoutCommand, bool>, LogoutHandler>();
 
 
 builder.Services.Configure<MailSettings>(builder.Configuration.GetSection(nameof(MailSettings)));
@@ -95,6 +100,7 @@ builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.Get
 // Add validator
 builder.Services.AddScoped<IValidator<AuthCommand>, AuthCommandValidator>();
 builder.Services.AddScoped<IValidator<SaveProgressQuery>, SaveProgressCommandValidator>();
+builder.Services.AddScoped<IValidator<SignUpCommand>, SignUpCommandValidator>();
 
 // Register behaviour for pipeline
 builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(StoreCookieBehaviour<,>));
@@ -105,9 +111,11 @@ var mapperConfig = new MapperConfiguration(cfg =>
 {
     cfg.AddProfile<VideoMappingProfile>();
     cfg.AddProfile<VideoStatMappingProfile>();
+    cfg.AddProfile<GenreMappingProfile>();
     cfg.AddProfile<VideoMapper>();
     cfg.AddProfile<AccountMapper>();
     cfg.AddProfile<VideoStatMapper>();
+    cfg.AddProfile<GenreMapper>();
 });
 var mapper = mapperConfig.CreateMapper();
 builder.Services.AddSingleton(mapper);

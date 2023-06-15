@@ -32,7 +32,22 @@ namespace SpellSmarty.Application.CommandHandlers
                 {
                     To = new List<string> { request.Email},
                     Subject = "SpellSmarty - Verify your email",
-                    Body = "Click in link to continue: " + verifyLink
+                    Body = $@"
+                              <h2 style=""color: #0c7cd5; font-family: Arial, sans-serif; font-size: 24px; margin-bottom: 20px;"">Spell Smarty</h2>
+  
+                              <p style=""color: #555; font-family: Arial, sans-serif; font-size: 16px; margin-bottom: 10px;"">{request.Name},</p>
+  
+                              <p style=""color: #555; font-family: Arial, sans-serif; font-size: 16px; margin-bottom: 10px;"">Thank you for your registration at Spell Smarty. We appreciate your support!</p>
+  
+                              <p style=""color: #555; font-family: Arial, sans-serif; font-size: 16px; margin-bottom: 10px;""> Click the following link to verify your email before proceeding: {verifyLink}</p>
+  
+                              <p style=""color: #555; font-family: Arial, sans-serif; font-size: 16px; margin-bottom: 10px;"">If you have any questions or need further assistance, please don't hesitate to reach out to our support team.</p>
+  
+                              <p style=""color: #555; font-family: Arial, sans-serif; font-size: 16px; margin-bottom: 10px;"">Thank you again for choosing Spell Smarty!</p>
+  
+                              <hr style=""border: none; border-top: 1px solid #ccc; margin: 20px 0;"">
+  
+                              <p style=""color: #888; font-family: Arial, sans-serif; font-size: 14px;"">Best regards,<br>The Spell Smarty Team</p>"
                 }
                 , new CancellationToken());
             return c;

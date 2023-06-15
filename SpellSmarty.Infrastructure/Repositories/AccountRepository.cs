@@ -6,6 +6,7 @@ using SpellSmarty.Domain.Interfaces;
 using SpellSmarty.Domain.Models;
 using SpellSmarty.Infrastructure.Data;
 using SpellSmarty.Infrastructure.DataModels;
+using SpellSmarty.Infrastructure.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +19,7 @@ namespace SpellSmarty.Infrastructure.Repositories
     {
         private readonly SpellSmartyContext _context;
         private readonly IMapper _mapper;
-        public AccountRepository(SpellSmartyContext context,IMapper mapper) : base(context)
+        public AccountRepository(SpellSmartyContext context, IMapper mapper) : base(context)
         {
             _context = context;
             _mapper = mapper;
@@ -29,7 +30,8 @@ namespace SpellSmarty.Infrastructure.Repositories
             var acc = _context.Accounts.FirstOrDefault(a => a.Username.Equals(username));
             if (acc != null)
             {
-                if (acc.Password.Equals(password))
+                //if (acc.Password.Equals(password))
+                if (PasswordHasher.Validate(acc.Password,password))
                 {
                     if (acc.EmailVerify == true)
                     {
@@ -44,11 +46,11 @@ namespace SpellSmarty.Infrastructure.Repositories
         public async Task<(int userId, string UserName, string plan)> GetAccountDetailsByIdAsync(int id)
         {
             Account account = _context.Accounts.FirstOrDefault(a => a.Id == id);
-            AccountModel acc = _mapper.Map <AccountModel>(account);
+            AccountModel acc = _mapper.Map<AccountModel>(account);
             return await Task.FromResult(
                 (acc.Id
-                ,acc.Username
-                ,_context.Plans.FirstOrDefault(p=>p.Planid== acc.Planid).PlanName)
+                , acc.Username
+                , _context.Plans.FirstOrDefault(p => p.Planid == acc.Planid).PlanName)
                 );
         }
 
@@ -65,12 +67,12 @@ namespace SpellSmarty.Infrastructure.Repositories
             {
                 throw new BadRequestException("Username existed");
             }
-
+            string hashpassword = PasswordHasher.Hash(password);
             AccountModel am = new AccountModel
             {
                 Email = email,
                 Name = name,
-                Password = password,
+                Password = hashpassword,
                 Username = username,
                 EmailVerify = false
             };
@@ -87,7 +89,8 @@ namespace SpellSmarty.Infrastructure.Repositories
         public async Task<bool> AddVerifyToken(int id, string verifyToken)
         {
             Account? a = _context.Accounts.FirstOrDefault(a => a.Id == id);
-            if (a != null) {
+            if (a != null)
+            {
                 a.VerifyToken = verifyToken;
                 await _context.SaveChangesAsync();
                 return true;
@@ -107,14 +110,14 @@ namespace SpellSmarty.Infrastructure.Repositories
             return false;
         }
 
-        public async Task<bool> CheckAccountVerificationToken(string verificationToken,int? id)
+        public async Task<bool> CheckAccountVerificationToken(string verificationToken, int? id)
         {
             if (id == null)
             {
                 return await Task.FromResult(false);
             }
-            Account? a =_context.Accounts
-                .FirstOrDefault(a => a.Id==id);
+            Account? a = _context.Accounts
+                .FirstOrDefault(a => a.Id == id);
             if (a != null)
             {
                 if (verificationToken.Equals(a.VerifyToken.Trim()))
@@ -122,7 +125,7 @@ namespace SpellSmarty.Infrastructure.Repositories
                 else
                     return await Task.FromResult(false);
             }
-            else 
+            else
                 return await Task.FromResult(false);
         }
 
@@ -139,6 +142,33 @@ namespace SpellSmarty.Infrastructure.Repositories
                 throw;
             }
             return accountList;
+        }
+
+        public async Task<AccountModel?> UpgradePremiumUser(int userId, int months)
+        {
+            var check = new AccountModel();
+            try
+            {
+                var user = await _context.Accounts.FirstOrDefaultAsync(a => a.Id == userId);
+                if (user != null)
+                {
+                    if (user.Planid != 2)
+                    {
+                        user.Planid = 2;
+                        user.SubribeDate = DateTime.Now;
+                        user.EndDate = DateTime.Now.AddMonths(months);
+                        _context.Accounts.Update(user);
+                        await _context.SaveChangesAsync();
+                        check = _mapper.Map(user, check);
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                check = null;
+                throw;
+            }
+            return check;
         }
     }
 }

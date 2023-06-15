@@ -6,6 +6,7 @@ namespace SpellSmarty.Domain.Interfaces
         IVideoRepository VideosRepository { get; }
         IAccountRepository AccountRepository { get; }
         IVideoStatRepository VideoStatRepository { get; }
+        IGenreRepository GenreRepository { get; }
         void Save();
     }
 }
