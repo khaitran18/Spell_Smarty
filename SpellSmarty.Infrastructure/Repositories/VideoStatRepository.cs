@@ -6,12 +6,6 @@ using SpellSmarty.Domain.Interfaces;
 using SpellSmarty.Domain.Models;
 using SpellSmarty.Infrastructure.Data;
 using SpellSmarty.Infrastructure.DataModels;
-using System;
-using System.Buffers.Text;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SpellSmarty.Infrastructure.Repositories
 {
@@ -26,12 +20,12 @@ namespace SpellSmarty.Infrastructure.Repositories
             _mapper = mapper;
         }
 
-        public async Task<string> GetProgressByUserIdAndVideoId(int userId, int videoId)
+        public async Task<string?> GetProgressByUserIdAndVideoId(int userId, int videoId)
         {
-            return await Task.FromResult(_context
-                .VideoStats
-                .FirstOrDefault(s => s.VideoId == videoId && s.AccountId == userId)
-                .Progress);
+            string progress = null;
+            var videoStat = _context.VideoStats.FirstOrDefault(s => (s.AccountId == userId) && (s.VideoId == videoId));
+            if (videoStat != null) progress = videoStat.Progress;
+            return await Task.FromResult(progress);
         }
 
         public async Task<VideoStatModel> SaveProgress(int userId,int videoid, int progress)
