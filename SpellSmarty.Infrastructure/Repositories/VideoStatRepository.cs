@@ -43,6 +43,7 @@ namespace SpellSmarty.Infrastructure.Repositories
                     Progress = progress.ToString()
                 };
                 _context.VideoStats.Add(sta);
+                _context.Videos.FirstOrDefault(v => v.Videoid == videoid).LearntCount++;
             }
             else 
             {
