@@ -32,7 +32,6 @@ namespace SpellSmarty.Application.CommandHandlers
                 {
                     To = new List<string> { request.Email},
                     Subject = "SpellSmarty - Verify your email",
-                    //Body = "Click in link to continue: " + verifyLink
                     Body = $@"
                               <h2 style=""color: #0c7cd5; font-family: Arial, sans-serif; font-size: 24px; margin-bottom: 20px;"">Spell Smarty</h2>
   

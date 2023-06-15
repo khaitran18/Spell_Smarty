@@ -6,6 +6,7 @@ using SpellSmarty.Domain.Interfaces;
 using SpellSmarty.Domain.Models;
 using SpellSmarty.Infrastructure.Data;
 using SpellSmarty.Infrastructure.DataModels;
+using SpellSmarty.Infrastructure.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,7 +30,8 @@ namespace SpellSmarty.Infrastructure.Repositories
             var acc = _context.Accounts.FirstOrDefault(a => a.Username.Equals(username));
             if (acc != null)
             {
-                if (acc.Password.Equals(password))
+                //if (acc.Password.Equals(password))
+                if (PasswordHasher.Validate(acc.Password,password))
                 {
                     if (acc.EmailVerify == true)
                     {
@@ -65,12 +67,12 @@ namespace SpellSmarty.Infrastructure.Repositories
             {
                 throw new BadRequestException("Username existed");
             }
-
+            string hashpassword = PasswordHasher.Hash(password);
             AccountModel am = new AccountModel
             {
                 Email = email,
                 Name = name,
-                Password = password,
+                Password = hashpassword,
                 Username = username,
                 EmailVerify = false
             };
