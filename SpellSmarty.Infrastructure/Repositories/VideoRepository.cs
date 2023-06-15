@@ -204,7 +204,6 @@ namespace SpellSmarty.Infrastructure.Repositories
             {
                 Video video = new Video
                 {
-                    Videoid = videoid,
                     Subtitle = subtitle,
                     VideoDescription = description,
                     Level = level,
