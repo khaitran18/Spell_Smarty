@@ -12,8 +12,8 @@ namespace SpellSmarty.Application.Common.Validation
     {
         public AuthCommandValidator()
         {
-            RuleFor(x => x.UserName).NotEmpty();
-            RuleFor(x => x.Password).NotEmpty();
+            RuleFor(x => x.UserName).NotEmpty().WithMessage("Username is required.");
+            RuleFor(x => x.Password).NotEmpty().WithMessage("Password is required.");
         }
     }
 }
