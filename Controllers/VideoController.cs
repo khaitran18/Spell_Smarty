@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SpellSmarty.Application.Commands;
 using SpellSmarty.Application.Queries;
 using SpellSmarty.Application.QueryHandlers;
 using SpellSmarty.Infrastructure.DataModels;
@@ -73,7 +74,7 @@ namespace SpellSmarty.Api.Controllers
         [HttpPost]
         public async Task<ActionResult> CreateGenre(string genreName)
         {
-            var returnGenre = await _mediator.Send(new AddGenreQuery(genreName));
+            var returnGenre = await _mediator.Send(new AddGenreCommand(genreName));
             return Ok(returnGenre);
         }
 
@@ -90,14 +91,17 @@ namespace SpellSmarty.Api.Controllers
                                                     int level,
                                                     bool premium)
         {
-            var returnGenre = await _mediator.Send(new AddVideoQuery(rating, subtitle, thumbnaillink, channelname, srcid, title, learntcount, description, level, premium));
+            var returnGenre = await _mediator.Send(new AddVideoCommand(rating, subtitle, thumbnaillink, channelname, srcid, title, learntcount, description, level, premium));
             return Ok(returnGenre);
         }
 
         // PUT api/<VideoController>/5
+        [Route("UpdateVideo")]
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public async Task<ActionResult> UpdateVideo(UpdateVideoCommand command)
         {
+            var returnGenre = await _mediator.Send(command);
+            return Ok(returnGenre);
         }
 
         // DELETE api/<VideoController>/5

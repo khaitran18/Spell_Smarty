@@ -11,9 +11,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SpellSmarty.Application.QueryHandlers
+namespace SpellSmarty.Application.CommandHandlers
 {
-    public class AddVideoHandler : IRequestHandler<AddVideoQuery, VideoDto>
+    public class AddVideoHandler : IRequestHandler<AddVideoCommand, VideoDto>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
@@ -24,7 +24,7 @@ namespace SpellSmarty.Application.QueryHandlers
             _mapper = mapper;
         }
 
-        public async Task<VideoDto> Handle(AddVideoQuery request, CancellationToken cancellationToken)
+        public async Task<VideoDto> Handle(AddVideoCommand request, CancellationToken cancellationToken)
         {
             VideoModel model = await _unitOfWork.VideosRepository.SaveVideo(request.rating, request.subtitle, request.thumbnaillink, request.channelname, request.srcid, request.title, request.learntcount, request.description, request.level, request.premium);
             VideoDto dto = _mapper.Map<VideoDto>(model);
