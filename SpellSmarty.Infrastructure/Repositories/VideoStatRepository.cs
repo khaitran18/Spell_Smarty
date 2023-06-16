@@ -42,18 +42,19 @@ namespace SpellSmarty.Infrastructure.Repositories
         public async Task<VideoStatModel> SaveProgress(int userId,int videoid, int progress)
         {
             VideoStatModel videoStatModel = new VideoStatModel();
-            VideoStat videoStat = _context.VideoStats
+            VideoStat? videoStat = _context.VideoStats
                 .Where(x => x.VideoId == videoid && x.AccountId == userId).FirstOrDefault();
             //if new videoStat
             if (videoStat == null)
             {
-                VideoStat sta = new VideoStat
+                videoStat = new VideoStat
                 {
                     AccountId = userId,
                     VideoId = videoid,
                     Progress = progress.ToString()
                 };
-                _context.VideoStats.Add(sta);
+                _context.VideoStats.Add(videoStat);
+                videoStatModel = _mapper.Map<VideoStatModel>(videoStat);
             }
             else 
             {
