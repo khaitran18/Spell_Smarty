@@ -19,6 +19,6 @@ namespace SpellSmarty.Domain.Interfaces
                                 string description,
                                 int level,
                                 bool premium);
-        Task<VideoModel> UpdateVideo(int videoid, string subtitle, string description, int level, bool premium);
+        Task<VideoModel> UpdateVideo(int videoid, string subtitle, string srcid, string title, string description, int level, bool premium);
     }
 }

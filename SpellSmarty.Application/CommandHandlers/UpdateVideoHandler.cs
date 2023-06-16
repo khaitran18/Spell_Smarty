@@ -27,7 +27,7 @@ namespace SpellSmarty.Application.CommandHandlers
 
         public async Task<VideoModel> Handle(UpdateVideoCommand request, CancellationToken cancellationToken)
         {
-            VideoModel model = await _unitOfWork.VideosRepository.UpdateVideo(request.Videoid, request.Subtitle, request.VideoDescription, request.level, request.Premium);
+            VideoModel model = await _unitOfWork.VideosRepository.UpdateVideo(request.Videoid, request.Subtitle, request.SrcId, request.Title, request.VideoDescription, request.level, request.Premium);
             return model;
         }
     }

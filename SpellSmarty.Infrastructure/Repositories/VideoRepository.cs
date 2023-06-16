@@ -152,11 +152,17 @@ namespace SpellSmarty.Infrastructure.Repositories
 
         public async Task<IEnumerable<VideoModel>> GetVideosByUserId(int userId)
         {
+            //IEnumerable<Video> list = await _context.Videos
+            //    .Include(vid => vid.LevelNavigation)
+            //    .Include(vid => vid.VideoGenres)
+            //    .Include(vid => vid.VideoStats)
+            //    .Where(x => x.VideoStats.FirstOrDefault().AccountId == userId)
+            //    .ToListAsync();
             IEnumerable<Video> list = await _context.Videos
                 .Include(vid => vid.LevelNavigation)
                 .Include(vid => vid.VideoGenres)
                 .Include(vid => vid.VideoStats)
-                .Where(x => x.VideoStats.FirstOrDefault().AccountId == userId)
+                .Where(vid => vid.VideoStats.Any(stat=>stat.AccountId==userId))
                 .ToListAsync();
             List<VideoModel> modelList = new List<VideoModel>();
             foreach (var video in list)
@@ -167,8 +173,9 @@ namespace SpellSmarty.Infrastructure.Repositories
                     , genre => genre.GenreId
                     , (name, genre) => genre.GenreName
                     );
-                var progess = video.VideoStats.FirstOrDefault().Progress;
-                videoModel.progress = progess;
+                //var progess = video.VideoStats.FirstOrDefault().Progress;
+                VideoStat? stat = video.VideoStats.FirstOrDefault(stat => stat.VideoId == videoModel.Videoid);
+                if (stat!=null) videoModel.progress = stat.Progress;
                 videoModel.VideoGenres = genreNames;
                 modelList.Add(videoModel);
             }
@@ -197,21 +204,20 @@ namespace SpellSmarty.Infrastructure.Repositories
             return videomodel;
         }
 
-        public async Task<VideoModel> UpdateVideo(int videoid, string subtitle, string description, int level, bool premium)
+        public async Task<VideoModel> UpdateVideo(int videoid, string subtitle, string srcid, string title, string description, int level, bool premium)
         {
             var result = _context.Videos.Where(x => x.Videoid == videoid).FirstOrDefault();
             if (result != null)
             {
-                Video video = new Video
-                {
-                    Subtitle = subtitle,
-                    VideoDescription = description,
-                    Level = level,
-                    Premium = premium,
-                    AddedDate = DateTime.Now,
-                };
-                _context.Videos.Update(video);
-                VideoModel videomodel = _mapper.Map<VideoModel>(video);
+                result.Subtitle = subtitle;
+                result.SrcId = srcid;
+                result.Title = title;
+                result.VideoDescription = description;
+                result.Level = level;
+                result.Premium = premium;
+                _context.Videos.Update(result);
+                _context.Entry(result).State = EntityState.Modified;
+                VideoModel videomodel = _mapper.Map<VideoModel>(result);
                 await _context.SaveChangesAsync();
                 return videomodel;
             }
