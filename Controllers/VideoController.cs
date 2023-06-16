@@ -97,7 +97,7 @@ namespace SpellSmarty.Api.Controllers
 
         // PUT api/<VideoController>/5
         [Route("UpdateVideo")]
-        [HttpPut("{id}")]
+        [HttpPut]
         public async Task<ActionResult> UpdateVideo(UpdateVideoCommand command)
         {
             var returnGenre = await _mediator.Send(command);
