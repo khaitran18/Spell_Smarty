@@ -1,4 +1,6 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SpellSmarty.Application.Commands;
@@ -16,7 +18,8 @@ namespace SpellSmarty.Api.Controllers
         {
             _mediator = mediator;
         }
-
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [Authorize(Roles = "Staff")]
         [HttpGet]
         public async Task<ActionResult> GetAccounts()
         {
@@ -33,6 +36,8 @@ namespace SpellSmarty.Api.Controllers
 
         }
 
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [Authorize(Roles = "Staff")]
         [HttpPut]
         public async Task<ActionResult> UpgradePremium([FromBody] UpgradePremiumCommand command)
         {
