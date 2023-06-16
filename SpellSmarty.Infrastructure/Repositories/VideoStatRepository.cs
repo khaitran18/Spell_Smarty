@@ -39,7 +39,7 @@ namespace SpellSmarty.Infrastructure.Repositories
             return await Task.FromResult(progress);
         }
 
-        public async Task<VideoStatModel> SaveProgress(int userId,int videoid, int progress)
+        public async Task<VideoStatModel> SaveProgress(int userId,int videoid, string progress)
         {
             VideoStatModel videoStatModel = new VideoStatModel();
             VideoStat? videoStat = _context.VideoStats
@@ -51,7 +51,7 @@ namespace SpellSmarty.Infrastructure.Repositories
                 {
                     AccountId = userId,
                     VideoId = videoid,
-                    Progress = progress.ToString()
+                    Progress = progress
                 };
                 _context.VideoStats.Add(videoStat);
                 videoStatModel = _mapper.Map<VideoStatModel>(videoStat);
@@ -71,7 +71,7 @@ namespace SpellSmarty.Infrastructure.Repositories
             await _context.SaveChangesAsync();
             return videoStatModel;
         }
-        private bool existProgress(string prg, int added)
+        private bool existProgress(string prg, string added)
         {
             if (prg.Contains(added.ToString())) return false;
             else return true;
