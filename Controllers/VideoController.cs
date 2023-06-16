@@ -61,6 +61,14 @@ namespace SpellSmarty.Api.Controllers
             return Ok(videos);
         }
 
+        [Route("Feedback")]
+        [HttpGet()]
+        public async Task<ActionResult> GetFeedBack()
+        {
+            var videos = await _mediator.Send(new GetFeedBackQuery());
+            return Ok(videos);
+        }
+
         // POST api/<VideoController>
         [Route("SaveProgress")]
         [HttpPost]

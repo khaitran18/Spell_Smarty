@@ -75,6 +75,7 @@ builder.Services.AddDbContext<SpellSmartyContext>(options => options.UseSqlServe
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped(typeof(IBaseRepository<>),typeof(BaseRepository<>));
 builder.Services.AddScoped<IRequestHandler<GetVideosQuery, IEnumerable<VideoDto>>, GetVideosHandler>();
+builder.Services.AddScoped<IRequestHandler<GetFeedBackQuery, IEnumerable<FeedBackDto>>, GetFeedBackHandler>();
 builder.Services.AddScoped<IRequestHandler<GetVideosByGenreQuery, IEnumerable<VideoDto>>, GetVideosByGenreHandler>();
 builder.Services.AddScoped<IRequestHandler<GetVideosByUserIdQuery, IEnumerable<VideoDto>>, GetVideosByUserIdHandler>();
 builder.Services.AddScoped<IRequestHandler<GetSingleVideoQuery, VideoDto>, GetSingleVideoHandler>();
@@ -114,10 +115,12 @@ var mapperConfig = new MapperConfiguration(cfg =>
     cfg.AddProfile<VideoMappingProfile>();
     cfg.AddProfile<VideoStatMappingProfile>();
     cfg.AddProfile<GenreMappingProfile>();
+    cfg.AddProfile<FeedBackMappingProfile>();
     cfg.AddProfile<VideoMapper>();
     cfg.AddProfile<AccountMapper>();
     cfg.AddProfile<VideoStatMapper>();
     cfg.AddProfile<GenreMapper>();
+    cfg.AddProfile<FeedBackMapper>();
 });
 var mapper = mapperConfig.CreateMapper();
 builder.Services.AddSingleton(mapper);
