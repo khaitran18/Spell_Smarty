@@ -26,12 +26,17 @@ namespace SpellSmarty.Infrastructure.Repositories
             _mapper = mapper;
         }
 
-        public async Task<string> GetProgressByUserIdAndVideoId(int userId, int videoId)
+        public async Task<string?> GetProgressByUserIdAndVideoId(int userId, int videoId)
         {
-            return await Task.FromResult(_context
+            string progress = null;
+            var stat = _context
                 .VideoStats
-                .FirstOrDefault(s => s.VideoId == videoId && s.AccountId == userId)
-                .Progress);
+                .FirstOrDefault(s => s.VideoId == videoId && s.AccountId == userId);
+            if (stat != null)
+            {
+                progress = stat.Progress;
+            }
+            return await Task.FromResult(progress);
         }
 
         public async Task<VideoStatModel> SaveProgress(int userId,int videoid, int progress)
