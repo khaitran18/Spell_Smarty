@@ -11,6 +11,8 @@ namespace SpellSmarty.Application.Commands
     {
         public int Videoid { get; set; }
         public string Subtitle { get; set; } = null!;
+        public string SrcId { get; set; } = null!;
+        public string Title { get; set; } = null!;
         public string? VideoDescription { get; set; }
         public int level { get; set; }
         public bool Premium { get; set; }

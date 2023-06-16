@@ -197,21 +197,20 @@ namespace SpellSmarty.Infrastructure.Repositories
             return videomodel;
         }
 
-        public async Task<VideoModel> UpdateVideo(int videoid, string subtitle, string description, int level, bool premium)
+        public async Task<VideoModel> UpdateVideo(int videoid, string subtitle, string srcid, string title, string description, int level, bool premium)
         {
             var result = _context.Videos.Where(x => x.Videoid == videoid).FirstOrDefault();
             if (result != null)
             {
-                Video video = new Video
-                {
-                    Subtitle = subtitle,
-                    VideoDescription = description,
-                    Level = level,
-                    Premium = premium,
-                    AddedDate = DateTime.Now,
-                };
-                _context.Videos.Update(video);
-                VideoModel videomodel = _mapper.Map<VideoModel>(video);
+                result.Subtitle = subtitle;
+                result.SrcId = srcid;
+                result.Title = title;
+                result.VideoDescription = description;
+                result.Level = level;
+                result.Premium = premium;
+                _context.Videos.Update(result);
+                _context.Entry(result).State = EntityState.Modified;
+                VideoModel videomodel = _mapper.Map<VideoModel>(result);
                 await _context.SaveChangesAsync();
                 return videomodel;
             }
