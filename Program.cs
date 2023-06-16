@@ -85,9 +85,10 @@ builder.Services.AddScoped<IRequestHandler<AddGenreCommand, GenreDto>, AddGenreH
 builder.Services.AddScoped<IRequestHandler<AddVideoCommand, VideoDto>, AddVideoHandler>();
 builder.Services.AddScoped<IRequestHandler<SignUpCommand, AccountModel>, SignUpHandler>();
 builder.Services.AddScoped<IRequestHandler<VerifyAccountCommand, Task>, VerifyAccountHandler>();
-builder.Services.AddScoped<IRequestHandler<UpgradePremiumCommand, AccountModel>, UpgradePremiumHandler>();
+builder.Services.AddScoped<IRequestHandler<UpgradePremiumCommand, AccountModel?>, UpgradePremiumHandler>();
 builder.Services.AddScoped<IRequestHandler<UpdateVideoCommand, VideoModel>, UpdateVideoHandler>();
 builder.Services.AddScoped<IRequestHandler<GetAllUserQuery, IEnumerable<AccountModel>>, GetAllUserHandler>();
+builder.Services.AddScoped<IRequestHandler<GetUserDetailsQuery, AccountModel?>, GetUserDetailsHandler>();
 builder.Services.AddScoped<IRequestHandler<LogoutCommand, bool>, LogoutHandler>();
 
 

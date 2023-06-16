@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace SpellSmarty.Application.CommandHandlers
 {
-    public class UpgradePremiumHandler : IRequestHandler<UpgradePremiumCommand, AccountModel>
+    public class UpgradePremiumHandler : IRequestHandler<UpgradePremiumCommand, AccountModel?>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMailService _mailService;

@@ -161,6 +161,13 @@ namespace SpellSmarty.Infrastructure.Repositories
                         await _context.SaveChangesAsync();
                         check = _mapper.Map(user, check);
                     }
+                    else
+                    {
+                        user.EndDate = user.EndDate?.AddDays(1).AddMonths(months);
+                        _context.Accounts.Update(user);
+                        await _context.SaveChangesAsync();
+                        check = _mapper.Map(user, check);
+                    }
                 }
             }
             catch (Exception)
@@ -169,6 +176,11 @@ namespace SpellSmarty.Infrastructure.Repositories
                 throw;
             }
             return check;
+        }
+
+        public async Task<AccountModel?> GetUserDetailsAsync(int id)
+        {
+            return _mapper.Map(await _context.Accounts.FirstOrDefaultAsync(a => a.Id == id), new AccountModel());
         }
     }
 }

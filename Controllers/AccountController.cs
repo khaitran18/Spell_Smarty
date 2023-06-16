@@ -28,7 +28,7 @@ namespace SpellSmarty.Api.Controllers
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-               return StatusCode(500);
+                return StatusCode(500);
             }
 
         }
@@ -47,6 +47,14 @@ namespace SpellSmarty.Api.Controllers
                 return StatusCode(500);
             }
 
+        }
+
+        [HttpGet("details")]
+        public async Task<IActionResult> GetUserDetais([FromHeader] string? Authorization)
+        {
+            if (Authorization == null || Authorization.Trim() == "") return BadRequest();
+            var userDetails = await _mediator.Send(new GetUserDetailsQuery(Authorization));
+            return Ok(userDetails);
         }
     }
 }
