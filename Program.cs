@@ -81,12 +81,14 @@ builder.Services.AddScoped<IRequestHandler<GetSingleVideoQuery, VideoDto>, GetSi
 builder.Services.AddScoped<IRequestHandler<AuthCommand, AuthResponseDto>, AuthHandler>();
 builder.Services.AddScoped<IRequestHandler<GetVideosByCreatorQuery, IEnumerable<VideoDto>>, GetVideosByCreatorHandler>();
 builder.Services.AddScoped<IRequestHandler<SaveProgressQuery, string>, SaveProgressHandler>();
-builder.Services.AddScoped<IRequestHandler<AddGenreQuery, GenreDto>, AddGenreHandler>();
-builder.Services.AddScoped<IRequestHandler<AddVideoQuery, VideoDto>, AddVideoHandler>();
+builder.Services.AddScoped<IRequestHandler<AddGenreCommand, GenreDto>, AddGenreHandler>();
+builder.Services.AddScoped<IRequestHandler<AddVideoCommand, VideoDto>, AddVideoHandler>();
 builder.Services.AddScoped<IRequestHandler<SignUpCommand, AccountModel>, SignUpHandler>();
 builder.Services.AddScoped<IRequestHandler<VerifyAccountCommand, Task>, VerifyAccountHandler>();
-builder.Services.AddScoped<IRequestHandler<UpgradePremiumCommand, AccountModel>, UpgradePremiumHandler>();
+builder.Services.AddScoped<IRequestHandler<UpgradePremiumCommand, AccountModel?>, UpgradePremiumHandler>();
+builder.Services.AddScoped<IRequestHandler<UpdateVideoCommand, VideoModel>, UpdateVideoHandler>();
 builder.Services.AddScoped<IRequestHandler<GetAllUserQuery, IEnumerable<AccountModel>>, GetAllUserHandler>();
+builder.Services.AddScoped<IRequestHandler<GetUserDetailsQuery, AccountModel?>, GetUserDetailsHandler>();
 builder.Services.AddScoped<IRequestHandler<LogoutCommand, bool>, LogoutHandler>();
 
 

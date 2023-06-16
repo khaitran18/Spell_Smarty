@@ -1,11 +1,13 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Ordering.Application.Common.Exceptions;
+using Org.BouncyCastle.Asn1.Ocsp;
 using SpellSmarty.Domain.Interfaces;
 using SpellSmarty.Domain.Models;
 using SpellSmarty.Infrastructure.Data;
 using SpellSmarty.Infrastructure.DataModels;
 using System.Collections.Generic;
+using System.Net.WebSockets;
 
 namespace SpellSmarty.Infrastructure.Repositories
 {
@@ -193,6 +195,30 @@ namespace SpellSmarty.Infrastructure.Repositories
             VideoModel videomodel = _mapper.Map<VideoModel>(video);
             await _context.SaveChangesAsync();
             return videomodel;
+        }
+
+        public async Task<VideoModel> UpdateVideo(int videoid, string subtitle, string description, int level, bool premium)
+        {
+            var result = _context.Videos.Where(x => x.Videoid == videoid).FirstOrDefault();
+            if (result != null)
+            {
+                Video video = new Video
+                {
+                    Subtitle = subtitle,
+                    VideoDescription = description,
+                    Level = level,
+                    Premium = premium,
+                    AddedDate = DateTime.Now,
+                };
+                _context.Videos.Update(video);
+                VideoModel videomodel = _mapper.Map<VideoModel>(video);
+                await _context.SaveChangesAsync();
+                return videomodel;
+            }
+            else
+            {
+                return null;
+            }
         }
     }
 }

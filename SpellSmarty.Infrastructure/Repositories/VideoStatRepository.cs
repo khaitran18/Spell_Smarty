@@ -23,8 +23,13 @@ namespace SpellSmarty.Infrastructure.Repositories
         public async Task<string?> GetProgressByUserIdAndVideoId(int userId, int videoId)
         {
             string progress = null;
-            var videoStat = _context.VideoStats.FirstOrDefault(s => (s.AccountId == userId) && (s.VideoId == videoId));
-            if (videoStat != null) progress = videoStat.Progress;
+            var stat = _context
+                .VideoStats
+                .FirstOrDefault(s => s.VideoId == videoId && s.AccountId == userId);
+            if (stat != null)
+            {
+                progress = stat.Progress;
+            }
             return await Task.FromResult(progress);
         }
 

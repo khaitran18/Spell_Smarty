@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using Ordering.Application.Common.Exceptions;
+using SpellSmarty.Application.Commands;
 using SpellSmarty.Application.Common.Dtos;
 using SpellSmarty.Application.Dtos;
 using SpellSmarty.Application.Queries;
@@ -13,9 +14,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SpellSmarty.Application.QueryHandlers
+namespace SpellSmarty.Application.CommandHandlers
 {
-    public class AddGenreHandler : IRequestHandler<AddGenreQuery, GenreDto>
+    public class AddGenreHandler : IRequestHandler<AddGenreCommand, GenreDto>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
@@ -26,7 +27,7 @@ namespace SpellSmarty.Application.QueryHandlers
             _mapper = mapper;
         }
 
-        public async Task<GenreDto> Handle(AddGenreQuery request, CancellationToken cancellationToken)
+        public async Task<GenreDto> Handle(AddGenreCommand request, CancellationToken cancellationToken)
         {
             GenreModel model = await _unitOfWork.GenreRepository.AddGenre(request.genrename);
             GenreDto dto = _mapper.Map<GenreDto>(model);

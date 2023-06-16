@@ -3,7 +3,7 @@ using SpellSmarty.Application.Dtos;
 
 namespace SpellSmarty.Application.Queries
 {
-    public record AddVideoQuery(float? rating,
+    public record AddVideoCommand(float? rating,
                                 string subtitle,
                                 string? thumbnaillink,
                                 string? channelname,

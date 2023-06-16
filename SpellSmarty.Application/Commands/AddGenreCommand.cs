@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SpellSmarty.Application.Queries
+namespace SpellSmarty.Application.Commands
 {
-    public record AddGenreQuery(string genrename) : IRequest<GenreDto>;
+    public record AddGenreCommand(string genrename) : IRequest<GenreDto>;
 }
