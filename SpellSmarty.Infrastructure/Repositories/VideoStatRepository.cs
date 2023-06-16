@@ -37,7 +37,7 @@ namespace SpellSmarty.Infrastructure.Repositories
         {
             VideoStatModel videoStatModel = new VideoStatModel();
             VideoStat? videoStat = _context.VideoStats
-                .Where(x => x.VideoId == videoid && x.AccountId == userId).FirstOrDefault();
+                .FirstOrDefault(x => x.VideoId == videoid && x.AccountId == userId);
             //if new videoStat
             if (videoStat == null)
             {

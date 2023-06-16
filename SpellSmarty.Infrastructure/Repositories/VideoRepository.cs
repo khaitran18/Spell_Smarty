@@ -152,31 +152,32 @@ namespace SpellSmarty.Infrastructure.Repositories
 
         public async Task<IEnumerable<VideoModel>> GetVideosByUserId(int userId)
         {
-            //IEnumerable<Video> list = await _context.Videos
-            //    .Include(vid => vid.LevelNavigation)
-            //    .Include(vid => vid.VideoGenres)
-            //    .Include(vid => vid.VideoStats)
-            //    .Where(x => x.VideoStats.FirstOrDefault().AccountId == userId)
-            //    .ToListAsync();
+            // get video list by account id
             IEnumerable<Video> list = await _context.Videos
                 .Include(vid => vid.LevelNavigation)
                 .Include(vid => vid.VideoGenres)
                 .Include(vid => vid.VideoStats)
-                .Where(vid => vid.VideoStats.Any(stat=>stat.AccountId==userId))
+                .Where(vid => vid.VideoStats.Any(stat=>stat.AccountId == userId))
                 .ToListAsync();
+
             List<VideoModel> modelList = new List<VideoModel>();
             foreach (var video in list)
             {
                 VideoModel videoModel = _mapper.Map<VideoModel>(video);
+
+                // hook genre into video
                 var genreNames = video.VideoGenres.Join(_context.Genres
                     , vd => vd.GenreId
                     , genre => genre.GenreId
                     , (name, genre) => genre.GenreName
                     );
-                //var progess = video.VideoStats.FirstOrDefault().Progress;
-                VideoStat? stat = video.VideoStats.FirstOrDefault(stat => stat.VideoId == videoModel.Videoid);
-                if (stat!=null) videoModel.progress = stat.Progress;
                 videoModel.VideoGenres = genreNames;
+
+                // hook progress into video via VideoStat
+                VideoStat? stat = video.VideoStats.FirstOrDefault(stat => (stat.VideoId == videoModel.Videoid)&&(stat.AccountId==userId));
+                if (stat!=null) videoModel.progress = stat.Progress;
+                
+                // return video
                 modelList.Add(videoModel);
             }
             return modelList;

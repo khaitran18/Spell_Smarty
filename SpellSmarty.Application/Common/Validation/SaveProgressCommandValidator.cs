@@ -12,7 +12,7 @@ namespace SpellSmarty.Application.Common.Validation
     {
         public SaveProgressCommandValidator()
         {
-            RuleFor(x => x.progress).NotEmpty().GreaterThanOrEqualTo(1);
+            RuleFor(x => x.progress).NotEmpty().GreaterThanOrEqualTo(0);
             RuleFor(x => x.videoId).NotEmpty().GreaterThanOrEqualTo(1);
             RuleFor(x => x.token).NotEmpty();
 
