@@ -103,6 +103,22 @@ namespace SpellSmarty.Api.Controllers
             return Ok(returnGenre);
         }
 
+        [Route("CreateNewVideoV2")]
+        [HttpPost]
+        public async Task<ActionResult> CreateVideoV2(CreateVideoCommand command)
+        {
+            var returnGenre = await _mediator.Send(command);
+            return Ok(returnGenre);
+        }
+
+        [Route("AddVideoGenre")]
+        [HttpPut]
+        public async Task<ActionResult> AddVideoGenre(UpdateVideoGenreCommand command)
+        {
+            var returnGenre = await _mediator.Send(command);
+            return Ok(returnGenre);
+        }
+
         // PUT api/<VideoController>/5
         [Route("UpdateVideo")]
         [HttpPut]

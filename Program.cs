@@ -88,8 +88,11 @@ builder.Services.AddScoped<IRequestHandler<SignUpCommand, AccountModel>, SignUpH
 builder.Services.AddScoped<IRequestHandler<VerifyAccountCommand, Task>, VerifyAccountHandler>();
 builder.Services.AddScoped<IRequestHandler<UpgradePremiumCommand, AccountModel?>, UpgradePremiumHandler>();
 builder.Services.AddScoped<IRequestHandler<UpdateVideoCommand, VideoModel>, UpdateVideoHandler>();
+builder.Services.AddScoped<IRequestHandler<CreateVideoCommand, VideoModel>, CreateVideoHandler>();
 builder.Services.AddScoped<IRequestHandler<GetAllUserQuery, IEnumerable<AccountModel>>, GetAllUserHandler>();
 builder.Services.AddScoped<IRequestHandler<GetUserDetailsQuery, AccountModel?>, GetUserDetailsHandler>();
+builder.Services.AddScoped<IRequestHandler<AddVideoGenreCommand, VideoGenreModel>, AddVideoGenreHandler>();
+builder.Services.AddScoped<IRequestHandler<UpdateVideoGenreCommand, VideoGenreModel>, UpdateVideoGenreHandler>();
 builder.Services.AddScoped<IRequestHandler<LogoutCommand, bool>, LogoutHandler>();
 
 
@@ -121,6 +124,7 @@ var mapperConfig = new MapperConfiguration(cfg =>
     cfg.AddProfile<VideoStatMapper>();
     cfg.AddProfile<GenreMapper>();
     cfg.AddProfile<FeedBackMapper>();
+    cfg.AddProfile<VideoGenreMapper>();
 });
 var mapper = mapperConfig.CreateMapper();
 builder.Services.AddSingleton(mapper);
