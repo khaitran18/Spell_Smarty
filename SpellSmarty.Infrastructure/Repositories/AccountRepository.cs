@@ -134,7 +134,7 @@ namespace SpellSmarty.Infrastructure.Repositories
             var accountList = new List<AccountModel>();
             try
             {
-                accountList = _mapper.Map(await _context.Accounts.Include(a => a.Plan).ToListAsync(), accountList);
+                accountList = _mapper.Map(await _context.Accounts.Include(a => a.Plan).Where(a => a.Planid != 3).ToListAsync(), accountList);
             }
             catch (Exception)
             {

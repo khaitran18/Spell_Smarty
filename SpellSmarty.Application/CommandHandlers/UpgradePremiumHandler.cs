@@ -39,7 +39,7 @@ namespace SpellSmarty.Application.CommandHandlers
   
                               <p style=""color: #555; font-family: Arial, sans-serif; font-size: 16px; margin-bottom: 10px;"">Thank you for being a part of Spell Smarty. We appreciate your support!</p>
   
-                              <p style=""color: #555; font-family: Arial, sans-serif; font-size: 16px; margin-bottom: 10px;"">We are pleased to inform you that your account has been upgraded to Premium. You will enjoy the premium features and benefits for {request.Months} months from <strong>{check.SubribeDate?.ToString("dd-MM-yyyy")}</strong> to <strong>{check.EndDate?.ToString("dd-MM-yyyy")}</strong>.</p>
+                              <p style=""color: #555; font-family: Arial, sans-serif; font-size: 16px; margin-bottom: 10px;"">We are pleased to inform you that your account has been upgraded to Premium. You will enjoy the premium features and benefits for {request.Months} month(s) from <strong>{check.SubribeDate?.ToString("dd-MM-yyyy")}</strong> to <strong>{check.EndDate?.ToString("dd-MM-yyyy")}</strong>.</p>
   
                               <p style=""color: #555; font-family: Arial, sans-serif; font-size: 16px; margin-bottom: 10px;"">If you have any questions or need further assistance, please don't hesitate to reach out to our support team.</p>
   

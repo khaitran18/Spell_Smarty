@@ -8,7 +8,7 @@ namespace SpellSmarty.Domain.Interfaces
         IVideoStatRepository VideoStatRepository { get; }
         IGenreRepository GenreRepository { get; }
         IFeedBackRepository FeedBackRepository { get; }
-
+        IVideoGenreRepository VideoGenreRepository { get; }
         void Save();
     }
 }

@@ -14,6 +14,7 @@ namespace SpellSmarty.Infrastructure
         private IVideoStatRepository _videoStatRepository;
         private IGenreRepository _genreRepository;
         private IFeedBackRepository _feedBackRepository;
+        private IVideoGenreRepository _videoGenreRepository;
         public UnitOfWork(SpellSmartyContext context, IMapper mapper)
         {
             _context = context;
@@ -25,6 +26,7 @@ namespace SpellSmarty.Infrastructure
         public IAccountRepository AccountRepository => _accountRepository ??= new AccountRepository(_context, _mapper);
         public IGenreRepository GenreRepository => _genreRepository ??= new GenreRepository(_context, _mapper);
         public IFeedBackRepository FeedBackRepository => _feedBackRepository ??= new FeedBackRepository(_context, _mapper);
+        public IVideoGenreRepository VideoGenreRepository => _videoGenreRepository ??= new VideoGenreRepository(_context, _mapper);
         public void Dispose()
         {
             _context.Dispose();
