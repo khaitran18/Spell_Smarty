@@ -54,6 +54,8 @@ namespace SpellSmarty.Api.Controllers
 
         }
 
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [Authorize(Roles = "Free, Premium")]
         [HttpGet("details")]
         public async Task<IActionResult> GetUserDetais([FromHeader] string? Authorization)
         {
