@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SpellSmarty.Application.Commands;
+using SpellSmarty.Application.Common.Dtos;
 using SpellSmarty.Application.Queries;
 using SpellSmarty.Application.QueryHandlers;
 using SpellSmarty.Infrastructure.DataModels;
@@ -63,10 +64,26 @@ namespace SpellSmarty.Api.Controllers
 
         [Route("Feedback")]
         [HttpGet()]
-        public async Task<ActionResult> GetFeedBack()
+        public async Task<IActionResult> GetFeedBack()
         {
             var videos = await _mediator.Send(new GetFeedBackQuery());
             return Ok(videos);
+        }
+        [HttpPost("feedback/{videoid}")]
+        [ProducesDefaultResponseType(typeof(FeedBackDto))]
+        public async Task<IActionResult> CreateFeedBack([FromHeader] string? Authorization
+            , [FromBody] CreateFeedbackCommand command
+            , [FromRoute]int videoid)
+        {
+                command.videoId= videoid;
+                command.token = Authorization;
+                var response = await _mediator.Send(command);
+                if (!response.Error) return Ok(response);
+                else
+                {
+                    var i = new ErrorHandling(response.Exception);
+                    return i;
+                } 
         }
 
         // POST api/<VideoController>

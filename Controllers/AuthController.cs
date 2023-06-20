@@ -1,11 +1,8 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Ordering.Application.Common.Exceptions;
 using SpellSmarty.Application.Commands;
 using SpellSmarty.Application.Dtos;
-using SpellSmarty.Application.Services;
-using SpellSmarty.Domain.Models;
-using SpellSmarty.Infrastructure.Services;
+
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -24,10 +21,15 @@ namespace SpellSmarty.Api.Controllers
 
         [HttpPost("login")]
         [ProducesDefaultResponseType(typeof(AuthResponseDto))]
-        [ProducesErrorResponseType(typeof(BadHttpRequestException))]
         public async Task<IActionResult> Login([FromBody] AuthCommand command)
         {
-            return Ok(await _mediator.Send(command));
+            var response = await _mediator.Send(command);
+            if (!response.Error) return Ok(response);
+            else
+            {
+                var i = new ErrorHandling(response.Exception);
+                return i;
+            }
         }
         [HttpPost("signup")]
         public async Task<IActionResult> Signup([FromBody] SignUpCommand command)

@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Principal;
-using System.Text;
-using System.Threading.Tasks;
+﻿using SpellSmarty.Application.Common.Response;
+
 
 namespace SpellSmarty.Application.Common.Dtos
 {
-    public class FeedBackDto
+    public class FeedBackDto : BaseResponse
     {
         public int FeedbackId { get; set; }
         public int AccountId { get; set; }

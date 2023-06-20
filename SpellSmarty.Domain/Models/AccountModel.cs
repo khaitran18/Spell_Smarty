@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SpellSmarty.Domain.Models
 {
-    public class AccountModel
+    public class AccountModel : BaseModel
     {
         public int Id { get; set; }
         public string Username { get; set; } = null!;

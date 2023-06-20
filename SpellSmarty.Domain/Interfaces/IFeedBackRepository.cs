@@ -10,5 +10,6 @@ namespace SpellSmarty.Domain.Interfaces
     public interface IFeedBackRepository : IBaseRepository<FeedBackModel>
     {
         Task<IEnumerable<FeedBackModel>> GetFeedBack();
+        Task<FeedBackModel> Create(int userId, int videoId, string content);
     }
 }

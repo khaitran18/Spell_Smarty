@@ -27,20 +27,27 @@ namespace SpellSmarty.Infrastructure.Repositories
 
         public async Task<int> CheckAccountAsync(string username, string password)
         {
-            var acc = _context.Accounts.FirstOrDefault(a => a.Username.Equals(username));
-            if (acc != null)
+            try
             {
-                //if (acc.Password.Equals(password))
-                if (PasswordHasher.Validate(acc.Password,password))
+                var acc = _context.Accounts.FirstOrDefault(a => a.Username.Equals(username));
+                if (acc != null)
                 {
-                    if (acc.EmailVerify == true)
+                    //if (acc.Password.Equals(password))
+                    if (PasswordHasher.Validate(acc.Password, password))
                     {
-                        return await Task.FromResult(acc.Id);
+                        if (acc.EmailVerify == true)
+                        {
+                            return await Task.FromResult(acc.Id);
+                        }
+                        else return await Task.FromResult(0);
                     }
-                    else return await Task.FromResult(0);
                 }
+                return await Task.FromResult(-1);
             }
-            return await Task.FromResult(-1);
+            catch (Exception)
+            {
+                return await Task.FromResult(-1);
+            }
         }
 
         public async Task<(int userId, string UserName, string plan)> GetAccountDetailsByIdAsync(int id)

@@ -23,6 +23,18 @@ namespace SpellSmarty.Infrastructure.Repositories
             _mapper = mapper;
         }
 
+        public async Task<FeedBackModel> Create(int userId, int videoId, string content)
+        {
+            Feedback feedback = new Feedback();
+            feedback.Content = content;
+            feedback.Date = DateTime.Now;
+            feedback.AccountId = userId;
+            feedback.Title = videoId.ToString();
+            _context.Feedbacks.AddAsync(feedback);
+            _context.SaveChanges();
+            return _mapper.Map<FeedBackModel>(feedback) ;
+        }
+
         public async Task<IEnumerable<FeedBackModel>> GetFeedBack()
         {
             IEnumerable<Feedback> list = await _context.Feedbacks

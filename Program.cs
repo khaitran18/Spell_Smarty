@@ -94,7 +94,7 @@ builder.Services.AddScoped<IRequestHandler<GetUserDetailsQuery, AccountModel?>, 
 builder.Services.AddScoped<IRequestHandler<AddVideoGenreCommand, VideoGenreModel>, AddVideoGenreHandler>();
 builder.Services.AddScoped<IRequestHandler<UpdateVideoGenreCommand, VideoGenreModel>, UpdateVideoGenreHandler>();
 builder.Services.AddScoped<IRequestHandler<LogoutCommand, bool>, LogoutHandler>();
-
+builder.Services.AddScoped<IRequestHandler<CreateFeedbackCommand, FeedBackDto>, CreateFeedbackHandler>();
 
 builder.Services.Configure<MailSettings>(builder.Configuration.GetSection(nameof(MailSettings)));
 builder.Services.AddTransient<IMailService, MailService>();
