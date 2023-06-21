@@ -71,7 +71,8 @@ namespace SpellSmarty.Api.Controllers
         }
         [HttpPost("feedback/{videoid}")]
         [ProducesDefaultResponseType(typeof(FeedBackDto))]
-        public async Task<IActionResult> CreateFeedBack([FromHeader] string? Authorization
+        public async Task<IActionResult> CreateFeedBack(
+            [FromHeader] string? Authorization
             , [FromBody] CreateFeedbackCommand command
             , [FromRoute]int videoid)
         {
