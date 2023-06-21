@@ -24,7 +24,8 @@ namespace SpellSmarty.Api.Controllers
         public async Task<IActionResult> Login([FromBody] AuthCommand command)
         {
             var response = await _mediator.Send(command);
-            if (!response.Error) return Ok(response);
+            if (response.Error!=null) 
+                return Ok(response);
             else
             {
                 var i = new ErrorHandling(response.Exception);

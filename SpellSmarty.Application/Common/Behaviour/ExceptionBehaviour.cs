@@ -1,6 +1,5 @@
 ﻿using MediatR;
 
-
 namespace SpellSmarty.Application.Common.Behaviour
 {
     public class ExceptionBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
@@ -8,7 +7,14 @@ namespace SpellSmarty.Application.Common.Behaviour
     {
         public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            try
+            {
+                return await next();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
     }
 }

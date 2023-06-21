@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using Ordering.Application.Common.Exceptions;
+using SpellSmarty.Application.Common.Exceptions;
 using SpellSmarty.Application.Common.Dtos;
 using SpellSmarty.Domain.Interfaces;
 using SpellSmarty.Domain.Models;

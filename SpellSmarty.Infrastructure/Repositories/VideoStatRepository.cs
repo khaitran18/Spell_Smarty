@@ -1,17 +1,10 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using Ordering.Application.Common.Exceptions;
-using SpellSmarty.Application.Dtos;
+using SpellSmarty.Application.Common.Exceptions;
 using SpellSmarty.Domain.Interfaces;
 using SpellSmarty.Domain.Models;
 using SpellSmarty.Infrastructure.Data;
 using SpellSmarty.Infrastructure.DataModels;
-using System;
-using System.Buffers.Text;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SpellSmarty.Infrastructure.Repositories
 {

@@ -3,7 +3,7 @@
 
 namespace SpellSmarty.Application.Common.Dtos
 {
-    public class FeedBackDto : BaseResponse
+    public class FeedBackDto
     {
         public int FeedbackId { get; set; }
         public int AccountId { get; set; }

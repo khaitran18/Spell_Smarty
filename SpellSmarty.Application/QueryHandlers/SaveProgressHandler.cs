@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
-using Ordering.Application.Common.Exceptions;
+using SpellSmarty.Application.Common.Exceptions;
 using SpellSmarty.Application.Dtos;
 using SpellSmarty.Application.Queries;
 using SpellSmarty.Application.Services;

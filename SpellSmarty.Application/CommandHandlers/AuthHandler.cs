@@ -1,13 +1,14 @@
 ﻿using MediatR;
-using Ordering.Application.Common.Exceptions;
+using SpellSmarty.Application.Common.Exceptions;
 using SpellSmarty.Application.Commands;
+using SpellSmarty.Application.Common.Response;
 using SpellSmarty.Application.Dtos;
 using SpellSmarty.Application.Services;
 using SpellSmarty.Domain.Interfaces;
 
 namespace SpellSmarty.Application.CommandHandlers
 {
-    public class AuthHandler : IRequestHandler<AuthCommand, AuthResponseDto>
+    public class AuthHandler : IRequestHandler<AuthCommand, BaseResponse<AuthResponseDto>>
     {
         private readonly ITokenServices _tokenGenerator;
         private readonly IUnitOfWork _unitOfWork;
@@ -18,9 +19,9 @@ namespace SpellSmarty.Application.CommandHandlers
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<AuthResponseDto> Handle(AuthCommand request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<AuthResponseDto>> Handle(AuthCommand request, CancellationToken cancellationToken)
         {
-            AuthResponseDto authResponse = new AuthResponseDto();
+            BaseResponse<AuthResponseDto> authResponse = new BaseResponse<AuthResponseDto>();
             try
             {
                 int userId = await _unitOfWork.AccountRepository.CheckAccountAsync(request.UserName, request.Password);
@@ -38,7 +39,7 @@ namespace SpellSmarty.Application.CommandHandlers
                 {
                     var (id, username, plan) = await _unitOfWork.AccountRepository.GetAccountDetailsByIdAsync(userId);
                     string token = _tokenGenerator.GenerateJWTToken((userId: id, userName: username, plan: plan));
-                    authResponse = new AuthResponseDto()
+                    authResponse.Result = new AuthResponseDto()
                     {
                         UserId = userId,
                         Name = username,
@@ -51,10 +52,9 @@ namespace SpellSmarty.Application.CommandHandlers
             catch (Exception e)
             {
                 authResponse.Error = true;
-                authResponse.Message = e.Message;
+                authResponse.Exception = e;
                 return authResponse;
-            }
-            
+            }   
         }
     }
 }

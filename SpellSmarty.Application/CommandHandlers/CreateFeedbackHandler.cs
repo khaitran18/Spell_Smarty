@@ -1,8 +1,9 @@
 ﻿using AutoMapper;
 using MediatR;
-using Ordering.Application.Common.Exceptions;
+using SpellSmarty.Application.Common.Exceptions;
 using SpellSmarty.Application.Commands;
 using SpellSmarty.Application.Common.Dtos;
+using SpellSmarty.Application.Common.Response;
 using SpellSmarty.Application.Services;
 using SpellSmarty.Domain.Interfaces;
 using SpellSmarty.Domain.Models;
@@ -10,7 +11,7 @@ using System.Security.Claims;
 
 namespace SpellSmarty.Application.CommandHandlers
 {
-    public class CreateFeedbackHandler : IRequestHandler<CreateFeedbackCommand, FeedBackDto>
+    public class CreateFeedbackHandler : IRequestHandler<CreateFeedbackCommand,BaseResponse<FeedBackDto>>
     {
         private readonly ITokenServices _tokenServices;
         private readonly IUnitOfWork _unitOfWork;
@@ -23,15 +24,16 @@ namespace SpellSmarty.Application.CommandHandlers
             _mapper = mapper;
         }
 
-        public async Task<FeedBackDto> Handle(CreateFeedbackCommand request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<FeedBackDto>> Handle(CreateFeedbackCommand request, CancellationToken cancellationToken)
         {
-            FeedBackDto response = new FeedBackDto();
+            BaseResponse<FeedBackDto> response = new BaseResponse<FeedBackDto>();
             try
             {
                 if (request.token == null)
                 {
                     response.Error = true;
                     response.Exception = new ForbiddenAccessException();
+                    response.Message = "Token not found";
                 }
                 ClaimsPrincipal claim = _tokenServices.ValidateToken(request.token);
                 int userId = int.Parse(claim.FindFirst("jti")?.Value);
@@ -39,16 +41,26 @@ namespace SpellSmarty.Application.CommandHandlers
                 {
                     response.Error = true;
                     response.Exception = new ForbiddenAccessException();
-                    return response;
+                    response.Message = "Invalid crefidential";
                 }
-                FeedBackModel f = await _unitOfWork.FeedBackRepository.Create(userId,request.videoId,request.content);
-                response = _mapper.Map<FeedBackDto>(f);
+                if (await _unitOfWork.VideosRepository.ExistVideo(request.videoId))
+                {
+                    FeedBackModel f = await _unitOfWork.FeedBackRepository.Create(userId, request.videoId, request.content);
+                    response.Result = _mapper.Map<FeedBackDto>(f);
+                }
+                else
+                {
+                    response.Error = true;
+                    response.Exception = new NotFoundException("Video not found");
+                    response.Message = "Video not found";
+                }
                 return response;
             }
-            catch (Exception e) 
+            catch (Exception e)
             {
                 response.Error = true;
                 response.Exception = e;
+                response.Message = e.Message;
                 return response;
             }
         }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SpellSmarty.Application.Common.Response
 {
-    public class ErrorResponse:BaseResponse
+    public class ErrorResponse
     {
     }
 }

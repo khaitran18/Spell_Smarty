@@ -25,6 +25,7 @@ using FluentValidation;
 using SpellSmarty.Application.Common.Validation;
 using SpellSmarty.Application.Common.Dtos;
 using SpellSmarty.Application.Common.Mappings;
+using SpellSmarty.Application.Common.Response;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -79,7 +80,7 @@ builder.Services.AddScoped<IRequestHandler<GetFeedBackQuery, IEnumerable<FeedBac
 builder.Services.AddScoped<IRequestHandler<GetVideosByGenreQuery, IEnumerable<VideoDto>>, GetVideosByGenreHandler>();
 builder.Services.AddScoped<IRequestHandler<GetVideosByUserIdQuery, IEnumerable<VideoDto>>, GetVideosByUserIdHandler>();
 builder.Services.AddScoped<IRequestHandler<GetSingleVideoQuery, VideoDto>, GetSingleVideoHandler>();
-builder.Services.AddScoped<IRequestHandler<AuthCommand, AuthResponseDto>, AuthHandler>();
+builder.Services.AddScoped<IRequestHandler<AuthCommand, BaseResponse<AuthResponseDto>>, AuthHandler>();
 builder.Services.AddScoped<IRequestHandler<GetVideosByCreatorQuery, IEnumerable<VideoDto>>, GetVideosByCreatorHandler>();
 builder.Services.AddScoped<IRequestHandler<SaveProgressQuery, string>, SaveProgressHandler>();
 builder.Services.AddScoped<IRequestHandler<AddGenreCommand, GenreDto>, AddGenreHandler>();
@@ -94,7 +95,7 @@ builder.Services.AddScoped<IRequestHandler<GetUserDetailsQuery, AccountModel?>, 
 builder.Services.AddScoped<IRequestHandler<AddVideoGenreCommand, VideoGenreModel>, AddVideoGenreHandler>();
 builder.Services.AddScoped<IRequestHandler<UpdateVideoGenreCommand, VideoGenreModel>, UpdateVideoGenreHandler>();
 builder.Services.AddScoped<IRequestHandler<LogoutCommand, bool>, LogoutHandler>();
-builder.Services.AddScoped<IRequestHandler<CreateFeedbackCommand, FeedBackDto>, CreateFeedbackHandler>();
+builder.Services.AddScoped<IRequestHandler<CreateFeedbackCommand, BaseResponse<FeedBackDto>>, CreateFeedbackHandler>();
 
 builder.Services.Configure<MailSettings>(builder.Configuration.GetSection(nameof(MailSettings)));
 builder.Services.AddTransient<IMailService, MailService>();
@@ -107,10 +108,12 @@ builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.Get
 builder.Services.AddScoped<IValidator<AuthCommand>, AuthCommandValidator>();
 builder.Services.AddScoped<IValidator<SaveProgressQuery>, SaveProgressCommandValidator>();
 builder.Services.AddScoped<IValidator<SignUpCommand>, SignUpCommandValidator>();
+builder.Services.AddScoped<IValidator<CreateFeedbackCommand>, CreateFeedbackCommandValidator>();
 
 // Register behaviour for pipeline
-builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(StoreCookieBehaviour<,>));
+builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ExceptionBehaviour<,>));
 builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(StoreCookieBehaviour<,>));
 
 // Configure AutoMapper
 var mapperConfig = new MapperConfiguration(cfg =>

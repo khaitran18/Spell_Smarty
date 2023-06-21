@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using SpellSmarty.Application.Commands;
+using SpellSmarty.Application.Common.Response;
 using SpellSmarty.Application.Dtos;
 using SpellSmarty.Application.Services;
 using System;
@@ -22,9 +23,9 @@ namespace SpellSmarty.Application.Common.Behaviour
         public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
         {
             var response = await next();
-            if (response is AuthResponseDto authResponseDto)
+            if (response is BaseResponse<AuthResponseDto> authResponseDto)
             {
-                if (!authResponseDto.Error) _cookieService.WriteCookie("token", authResponseDto.Token, 1);
+                if (authResponseDto.Error!=null) _cookieService.WriteCookie("token", authResponseDto.Result.Token, 1);
             }
             return response;
         }

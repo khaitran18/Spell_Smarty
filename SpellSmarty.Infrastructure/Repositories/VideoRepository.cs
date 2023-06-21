@@ -1,13 +1,10 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using Ordering.Application.Common.Exceptions;
-using Org.BouncyCastle.Asn1.Ocsp;
+using SpellSmarty.Application.Common.Exceptions;
 using SpellSmarty.Domain.Interfaces;
 using SpellSmarty.Domain.Models;
 using SpellSmarty.Infrastructure.Data;
 using SpellSmarty.Infrastructure.DataModels;
-using System.Collections.Generic;
-using System.Net.WebSockets;
 
 namespace SpellSmarty.Infrastructure.Repositories
 {
@@ -20,6 +17,11 @@ namespace SpellSmarty.Infrastructure.Repositories
         {
             _context = context;
             _mapper = mapper;
+        }
+
+        public async Task<bool> ExistVideo(int videoId)
+        {
+            return await Task.FromResult(_context.Videos.Any(v => v.Videoid == videoId)) ;
         }
 
         // using seperate method than base method to include genre into video

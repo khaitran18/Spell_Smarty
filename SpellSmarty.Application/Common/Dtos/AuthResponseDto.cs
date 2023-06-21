@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SpellSmarty.Application.Dtos
 {
-    public class AuthResponseDto : BaseResponse
+    public class AuthResponseDto
     {
         public int UserId { get; set; }
         public string Name { get; set; }

@@ -78,11 +78,11 @@ namespace SpellSmarty.Api.Controllers
                 command.videoId= videoid;
                 command.token = Authorization;
                 var response = await _mediator.Send(command);
-                if (!response.Error) return Ok(response);
+                if (!response.Error) 
+                    return Ok(response);
                 else
                 {
-                    var i = new ErrorHandling(response.Exception);
-                    return i;
+                    return new ErrorHandling(response.Exception);
                 } 
         }
 

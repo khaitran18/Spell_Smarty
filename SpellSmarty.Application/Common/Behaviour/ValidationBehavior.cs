@@ -1,12 +1,6 @@
 ﻿using FluentValidation;
 using MediatR;
-using Ordering.Application.Common.Exceptions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+using SpellSmarty.Application.Common.Exceptions;
 namespace SpellSmarty.Application.Common.Behaviour
 {
     public sealed class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
@@ -15,7 +9,7 @@ namespace SpellSmarty.Application.Common.Behaviour
         private readonly IEnumerable<IValidator<TRequest>> _validators;
         public ValidationBehavior(IEnumerable<IValidator<TRequest>> validators) => _validators = validators;
 
-        public Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
+        public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
         {
             var validationFailures = _validators
             .Select(validator => validator.Validate(request))
@@ -26,10 +20,10 @@ namespace SpellSmarty.Application.Common.Behaviour
             if (validationFailures.Any())
             {
                 var error = string.Join("\r\n", validationFailures);
-                throw new FluentValidation.ValidationException(error);
+                Application.Common.Exceptions.ValidationException exception = new Application.Common.Exceptions.ValidationException();
+                return (TResponse)Activator.CreateInstance(typeof(TResponse),true, error,exception);
             }
-
-            return next();
+            return await next();
         }
     }
 }

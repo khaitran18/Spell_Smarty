@@ -1,4 +1,4 @@
-﻿namespace Ordering.Application.Common.Exceptions
+﻿namespace SpellSmarty.Application.Common.Exceptions
 {
     public class BadRequestException : Exception
     {

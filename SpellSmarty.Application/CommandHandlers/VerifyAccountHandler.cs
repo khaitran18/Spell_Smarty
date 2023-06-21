@@ -1,5 +1,5 @@
 ﻿using MediatR;
-using Ordering.Application.Common.Exceptions;
+using SpellSmarty.Application.Common.Exceptions;
 using SpellSmarty.Application.Commands;
 using SpellSmarty.Application.Services;
 using SpellSmarty.Domain.Interfaces;

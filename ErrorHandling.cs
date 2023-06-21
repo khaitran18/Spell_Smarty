@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Ordering.Application.Common.Exceptions;
-using SpellSmarty.Application.Common.Response;
+using SpellSmarty.Application.Common.Exceptions;
 
 namespace SpellSmarty.Api
 {
@@ -18,21 +17,28 @@ namespace SpellSmarty.Api
             var objectResult = new ObjectResult(new
             {
                 Message = "An error occurred.",
-                StatusCode = 500 // Set the desired HTTP status code
+                StatusCode = 500
             });
             if (_exception is BadRequestException badreq)
             {
                 objectResult.StatusCode = 400;
+                objectResult.Value = _exception.Message;
             }
             if (_exception is ForbiddenAccessException forbid)
             {
                 objectResult.StatusCode = 403;
+                objectResult.Value = _exception.Message;
             }
             if (_exception is NotFoundException notfound)
             {
                 objectResult.StatusCode = 404;
+                objectResult.Value = _exception.Message;
             }
-            objectResult.Value = _exception.Message;
+            if (_exception is ValidationException valid)
+            {
+                objectResult.StatusCode = 400;
+                objectResult.Value = _exception.Message;
+            }
             await objectResult.ExecuteResultAsync(context);
         }
     }
