@@ -65,13 +65,31 @@ builder.Services.AddAuthentication(x =>
 
     };
 });
+//mysql database configuration
+var serverVersion = new MySqlServerVersion(new Version(8, 0, 32));
+
+builder.Services.AddDbContext<SpellSmartyContext>(
+    dbContextOptions => dbContextOptions
+        .UseMySql(builder.Configuration["SpellSmarty2"], serverVersion, options => options.EnableRetryOnFailure(maxRetryCount: 5,
+                     maxRetryDelay: System.TimeSpan.FromSeconds(30),
+                     errorNumbersToAdd: null))
+        //.UseSnakeCaseNamingConvention()
+        // The following three options help with debugging, but should
+        // be changed or removed for production.
+        .LogTo(Console.WriteLine, LogLevel.Information)
+        .EnableSensitiveDataLogging()
+        .EnableDetailedErrors()
+);
+
+
+
 builder.Services.AddSingleton<ITokenServices>(new TokenService(_key, _issuer, _audience, _expirtyMinutes));
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddDbContext<SpellSmartyContext>(options => options.UseSqlServer(
-    builder.Configuration.GetConnectionString("SpellSmarty")
-));
+//builder.Services.AddDbContext<SpellSmartyContext>(options => options.UseSqlServer(
+//    builder.Configuration.GetConnectionString("SpellSmarty")
+//));
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped(typeof(IBaseRepository<>),typeof(BaseRepository<>));
 builder.Services.AddScoped<IRequestHandler<GetVideosQuery, IEnumerable<VideoDto>>, GetVideosHandler>();
