@@ -49,10 +49,10 @@ namespace SpellSmarty.Application.CommandHandlers
                 }
                 return authResponse;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 authResponse.Error = true;
-                authResponse.Exception = e;
+                authResponse.Exception = new Exception("Error in the server");
                 return authResponse;
             }   
         }

@@ -1,11 +1,12 @@
 ﻿using MediatR;
 using SpellSmarty.Application.Commands;
+using SpellSmarty.Application.Common.Response;
 using SpellSmarty.Application.Services;
 using SpellSmarty.Domain.Interfaces;
 using SpellSmarty.Domain.Models;
 namespace SpellSmarty.Application.CommandHandlers
 {
-    public class SignUpHandler : IRequestHandler<SignUpCommand, AccountModel>
+    public class SignUpHandler : IRequestHandler<SignUpCommand, BaseResponse<AccountModel>>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMailService _mailService;
@@ -18,21 +19,29 @@ namespace SpellSmarty.Application.CommandHandlers
             _tokenServices = tokenServices;
         }
 
-        public async Task<AccountModel> Handle(SignUpCommand request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<AccountModel>> Handle(SignUpCommand request, CancellationToken cancellationToken)
         {
-            AccountModel c = await _unitOfWork.AccountRepository.SignUpAsync(request.Username, request.Password, request.Email, request.Name);
+            BaseResponse<AccountModel> response = new BaseResponse<AccountModel>();
+            try
+            {
+                AccountModel c = await _unitOfWork.AccountRepository.SignUpAsync(request.Username, request.Password, request.Email, request.Name);
 
-            string verifyToken = _tokenServices.GenerateJWTToken((userId:c.Id, userName: c.Username, roles:c.Password));
-
-            await _unitOfWork.AccountRepository.AddVerifyToken(c.Id,verifyToken);
-
-            string verifyLink = "https://spellsmarty.com/verify/" + verifyToken;
-            await _mailService.SendAsync(
-                new MailDataModel
+                if (c == null)
                 {
-                    To = new List<string> { request.Email},
-                    Subject = "SpellSmarty - Verify your email",
-                    Body = $@"
+                    response.Error = true;
+                    response.Exception = new Exception("Error in creating account");
+                }
+                string verifyToken = _tokenServices.GenerateJWTToken((userId: c.Id, userName: c.Username, roles: c.Password));
+
+                await _unitOfWork.AccountRepository.AddVerifyToken(c.Id, verifyToken);
+
+                string verifyLink = "https://spellsmarty.com/verify/" + verifyToken;
+                await _mailService.SendAsync(
+                    new MailDataModel
+                    {
+                        To = new List<string> { request.Email },
+                        Subject = "SpellSmarty - Verify your email",
+                        Body = $@"
                               <h2 style=""color: #0c7cd5; font-family: Arial, sans-serif; font-size: 24px; margin-bottom: 20px;"">Spell Smarty</h2>
   
                               <p style=""color: #555; font-family: Arial, sans-serif; font-size: 16px; margin-bottom: 10px;"">{request.Name},</p>
@@ -48,9 +57,16 @@ namespace SpellSmarty.Application.CommandHandlers
                               <hr style=""border: none; border-top: 1px solid #ccc; margin: 20px 0;"">
   
                               <p style=""color: #888; font-family: Arial, sans-serif; font-size: 14px;"">Best regards,<br>The Spell Smarty Team</p>"
-                }
-                , new CancellationToken());
-            return c;
+                    }
+                    , new CancellationToken());
+                response.Result = c;
+            }
+            catch (Exception e)
+            {
+                response.Error = true;
+                response.Exception = e;
+            }
+            return response;
         }
     }
 }

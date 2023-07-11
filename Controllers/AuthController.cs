@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using SpellSmarty.Application.Commands;
+using SpellSmarty.Application.Common.Response;
 using SpellSmarty.Application.Dtos;
 
 
@@ -25,17 +26,32 @@ namespace SpellSmarty.Api.Controllers
         {
             var response = await _mediator.Send(command);
             if (!response.Error) 
-                return Ok(response);
+                return Ok(response.Result);
             else
             {
-                var i = new ErrorHandling(response.Exception);
-                return i;
+                var ErrorResponse = new BaseResponse<Exception>
+                {
+                    Exception = response.Exception,
+                    Message = response.Message
+                };
+                return new ErrorHandling<Exception>(ErrorResponse);
             }
         }
         [HttpPost("signup")]
         public async Task<IActionResult> Signup([FromBody] SignUpCommand command)
         {
-            return Ok(await _mediator.Send(command));
+            var response = await _mediator.Send(command);
+            if (!response.Error)
+                return Ok(response.Result);
+            else
+            {
+                var ErrorResponse = new BaseResponse<Exception>
+                {
+                    Exception = response.Exception,
+                    Message = response.Message
+                };
+                return new ErrorHandling<Exception>(ErrorResponse);
+            }
         }
         [HttpPost("verify")]
         public async Task<IActionResult> Verify([FromBody] VerifyAccountCommand command)

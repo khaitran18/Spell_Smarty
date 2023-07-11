@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SpellSmarty.Application.Commands;
 using SpellSmarty.Application.Common.Dtos;
+using SpellSmarty.Application.Common.Response;
 using SpellSmarty.Application.Queries;
 using SpellSmarty.Application.QueryHandlers;
 using SpellSmarty.Infrastructure.DataModels;
@@ -36,7 +37,7 @@ namespace SpellSmarty.Api.Controllers
         [HttpGet()]
         public async Task<ActionResult> GetSingleVideo([FromHeader] string? Authorization, int videoId)
         {
-            var video = await _mediator.Send(new GetSingleVideoQuery(videoId,Authorization));
+            var video = await _mediator.Send(new GetSingleVideoQuery(videoId, Authorization));
             return Ok(video);
         }
 
@@ -44,7 +45,7 @@ namespace SpellSmarty.Api.Controllers
         [HttpGet()]
         public async Task<ActionResult> GetVideosByCreator(int videoId)
         {
-            var video = await _mediator.Send(new GetVideosByCreatorQuery(videoId)); 
+            var video = await _mediator.Send(new GetVideosByCreatorQuery(videoId));
             return Ok(video);
         }
         [Route("GetVideoByGenre")]
@@ -70,21 +71,27 @@ namespace SpellSmarty.Api.Controllers
             return Ok(videos);
         }
         [HttpPost("feedback/{videoid}")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [Authorize(Roles = "Free,Premium")]
         [ProducesDefaultResponseType(typeof(FeedBackDto))]
         public async Task<IActionResult> CreateFeedBack(
             [FromHeader] string? Authorization
             , [FromBody] CreateFeedbackCommand command
-            , [FromRoute]int videoid)
+            , [FromRoute] int videoid)
         {
-                command.videoId= videoid;
-                command.token = Authorization;
-                var response = await _mediator.Send(command);
-                if (!response.Error) 
-                    return Ok(response);
-                else
+            command.videoId = videoid;
+            command.token = Authorization;
+            var response = await _mediator.Send(command);
+            if (!response.Error) return Ok(response.Result);
+            else
+            {
+                var ErrorResponse = new BaseResponse<Exception>
                 {
-                    return new ErrorHandling(response.Exception);
-                } 
+                    Exception = response.Exception,
+                    Message = response.Message
+                };
+                return new ErrorHandling<Exception>(ErrorResponse);
+            }
         }
 
         // POST api/<VideoController>

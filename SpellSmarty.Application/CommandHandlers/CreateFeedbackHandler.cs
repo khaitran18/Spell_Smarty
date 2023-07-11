@@ -11,11 +11,11 @@ using System.Security.Claims;
 
 namespace SpellSmarty.Application.CommandHandlers
 {
-    public class CreateFeedbackHandler : IRequestHandler<CreateFeedbackCommand,BaseResponse<FeedBackDto>>
+    public class CreateFeedbackHandler : IRequestHandler<CreateFeedbackCommand, BaseResponse<FeedBackDto>>
     {
         private readonly ITokenServices _tokenServices;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IMapper _mapper; 
+        private readonly IMapper _mapper;
 
         public CreateFeedbackHandler(ITokenServices tokenServices, IUnitOfWork unitOfWork, IMapper mapper)
         {
@@ -29,21 +29,14 @@ namespace SpellSmarty.Application.CommandHandlers
             BaseResponse<FeedBackDto> response = new BaseResponse<FeedBackDto>();
             try
             {
-                if (request.token == null)
-                {
-                    response.Error = true;
-                    response.Exception = new ForbiddenAccessException();
-                    response.Message = "Token not found";
-                }
                 ClaimsPrincipal claim = _tokenServices.ValidateToken(request.token);
                 int userId = int.Parse(claim.FindFirst("jti")?.Value);
                 if (claim == null)
                 {
                     response.Error = true;
                     response.Exception = new ForbiddenAccessException();
-                    response.Message = "Invalid crefidential";
                 }
-                if (await _unitOfWork.VideosRepository.ExistVideo(request.videoId))
+                else if (await _unitOfWork.VideosRepository.ExistVideo(request.videoId))
                 {
                     FeedBackModel f = await _unitOfWork.FeedBackRepository.Create(userId, request.videoId, request.content);
                     response.Result = _mapper.Map<FeedBackDto>(f);
@@ -52,17 +45,15 @@ namespace SpellSmarty.Application.CommandHandlers
                 {
                     response.Error = true;
                     response.Exception = new NotFoundException("Video not found");
-                    response.Message = "Video not found";
                 }
-                return response;
             }
             catch (Exception e)
             {
                 response.Error = true;
                 response.Exception = e;
-                response.Message = e.Message;
-                return response;
+                response.Message = "Error in the server";
             }
+            return response;
         }
     }
 }
