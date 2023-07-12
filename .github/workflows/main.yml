@@ -2,10 +2,10 @@ name: ASP.NET Application
 on:
   push:
     branches:
-      - main
+      - mysql-version
   pull_request:
     branches:
-      - main
+      - mysql-version
 
 jobs:
   build:
