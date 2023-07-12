@@ -97,10 +97,21 @@ namespace SpellSmarty.Api.Controllers
         // POST api/<VideoController>
         [Route("SaveProgress")]
         [HttpPost]
-        public async Task<ActionResult> SaveProgress([FromHeader] string? Authorization, int videoId, string progress)
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [Authorize(Roles = "Free,Premium")]
+        public async Task<IActionResult> SaveProgress([FromHeader] string? Authorization, int videoId, string progress)
         {
-            string returnPrg = await _mediator.Send(new SaveProgressQuery(Authorization, videoId, progress));
-            return Ok(returnPrg);
+            var response = await _mediator.Send(new SaveProgressQuery(Authorization, videoId, progress));
+            if (!response.Error) return Ok(response.Result);
+            else
+            {
+                var ErrorResponse = new BaseResponse<Exception>
+                {
+                    Exception = response.Exception,
+                    Message = response.Message
+                };
+                return new ErrorHandling<Exception>(ErrorResponse);
+            }
         }
 
         [Route("CreateGenre")]

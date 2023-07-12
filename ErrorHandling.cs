@@ -17,9 +17,10 @@ namespace SpellSmarty.Api
         {
             var objectResult = new ObjectResult(new
             {
-                Message = _exception.Message,
-                StatusCode = 500 // Set the desired HTTP status code
+                Value = _exception.Message,
             });
+            objectResult.StatusCode = 500;
+
             if (_exception.Exception is BadRequestException badreq)
             {
                 objectResult.StatusCode = 400;

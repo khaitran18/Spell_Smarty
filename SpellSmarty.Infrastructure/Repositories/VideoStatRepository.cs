@@ -34,35 +34,43 @@ namespace SpellSmarty.Infrastructure.Repositories
 
         public async Task<VideoStatModel> SaveProgress(int userId,int videoid, string progress)
         {
-            VideoStatModel videoStatModel = new VideoStatModel();
-            VideoStat? videoStat = _context.VideoStats
-                .FirstOrDefault(x => x.VideoId == videoid && x.AccountId == userId);
-            //if new videoStat
-            if (videoStat == null)
+            //check if video exist
+            if (!_context.Videos.Any(v=>v.Videoid==videoid))
             {
-                videoStat = new VideoStat
-                {
-                    AccountId = userId,
-                    VideoId = videoid,
-                    Progress = progress
-                };
-                _context.VideoStats.Add(videoStat);
-                videoStatModel = _mapper.Map<VideoStatModel>(videoStat);
+                throw new BadRequestException("Video not exist");
             }
-            else 
+            else
             {
-            videoStatModel = _mapper.Map<VideoStatModel>(videoStat);
-                if (existProgress(videoStat.Progress, progress))
+                VideoStatModel videoStatModel = new VideoStatModel();
+                VideoStat? videoStat = _context.VideoStats
+                    .FirstOrDefault(x => x.VideoId == videoid && x.AccountId == userId);
+                //if new videoStat
+                if (videoStat == null)
                 {
-                    string newProgress = videoStat.Progress + " " + progress;
-                    videoStatModel.Progress = newProgress;
-                    videoStat.Progress = newProgress;
-                    _context.Entry(videoStat).State = EntityState.Modified;
+                    videoStat = new VideoStat
+                    {
+                        AccountId = userId,
+                        VideoId = videoid,
+                        Progress = progress
+                    };
+                    _context.VideoStats.Add(videoStat);
+                    videoStatModel = _mapper.Map<VideoStatModel>(videoStat);
                 }
-                else throw new BadRequestException("Progress existed");
+                else
+                {
+                    videoStatModel = _mapper.Map<VideoStatModel>(videoStat);
+                    if (existProgress(videoStat.Progress, progress))
+                    {
+                        string newProgress = videoStat.Progress + " " + progress;
+                        videoStatModel.Progress = newProgress;
+                        videoStat.Progress = newProgress;
+                        _context.Entry(videoStat).State = EntityState.Modified;
+                    }
+                    else throw new Exception("Progress existed");
+                }
+                await _context.SaveChangesAsync();
+                return videoStatModel;
             }
-            await _context.SaveChangesAsync();
-            return videoStatModel;
         }
         private bool existProgress(string prg, string added)
         {
