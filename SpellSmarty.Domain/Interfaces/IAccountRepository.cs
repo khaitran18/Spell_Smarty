@@ -18,5 +18,7 @@ namespace SpellSmarty.Domain.Interfaces
         public Task<IEnumerable<AccountModel>?> GetAllAccountsAsync();
         public Task<AccountModel?> UpgradePremiumUser(int userId, int months);
         public Task<AccountModel?> GetUserDetailsAsync(int id);
+        public Task<bool> ExistUsername(string username);
+        public Task<bool> ExistEmail(string email);
     }
 }

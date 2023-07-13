@@ -49,25 +49,32 @@ namespace SpellSmarty.Infrastructure.Services
         }
         public ClaimsPrincipal ValidateToken(string jwtToken)
         {
-            jwtToken = jwtToken.Trim();
-            // token now include bearer, we dont need bearer
-            var index = jwtToken.IndexOf(" ");
-            if (index != -1)
+            try
             {
-                jwtToken = jwtToken.Substring(index + 1);
+                jwtToken = jwtToken.Trim();
+                // token now include bearer, we dont need bearer
+                var index = jwtToken.IndexOf(" ");
+                if (index != -1)
+                {
+                    jwtToken = jwtToken.Substring(index + 1);
+                }
+
+                IdentityModelEventSource.ShowPII = true;
+                SecurityToken validatedToken;
+                TokenValidationParameters validationParameters = new TokenValidationParameters();
+
+                validationParameters.ValidateLifetime = true;
+
+                validationParameters.ValidAudience = _audience.ToLower();
+                validationParameters.ValidIssuer = _issuer.ToLower();
+                validationParameters.IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_key));
+                ClaimsPrincipal principal = new JwtSecurityTokenHandler().ValidateToken(jwtToken, validationParameters, out validatedToken);
+                return principal;
             }
-            
-            IdentityModelEventSource.ShowPII = true;
-            SecurityToken validatedToken;
-            TokenValidationParameters validationParameters = new TokenValidationParameters();
-
-            validationParameters.ValidateLifetime = true;
-
-            validationParameters.ValidAudience = _audience.ToLower();
-            validationParameters.ValidIssuer = _issuer.ToLower();
-            validationParameters.IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_key));
-            ClaimsPrincipal principal = new JwtSecurityTokenHandler().ValidateToken(jwtToken, validationParameters, out validatedToken);
-            return principal;
+            catch (Exception e)
+            {
+                throw new Exception("Error in validating token");
+            }
         }
     }
 }

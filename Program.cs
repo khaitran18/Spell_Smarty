@@ -104,7 +104,7 @@ builder.Services.AddScoped<IRequestHandler<SaveProgressQuery, BaseResponse<strin
 builder.Services.AddScoped<IRequestHandler<AddGenreCommand, GenreDto>, AddGenreHandler>();
 builder.Services.AddScoped<IRequestHandler<AddVideoCommand, VideoDto>, AddVideoHandler>();
 builder.Services.AddScoped<IRequestHandler<SignUpCommand, BaseResponse<AccountModel>>, SignUpHandler>();
-builder.Services.AddScoped<IRequestHandler<VerifyAccountCommand, Task>, VerifyAccountHandler>();
+builder.Services.AddScoped<IRequestHandler<VerifyAccountCommand, BaseResponse<bool>>, VerifyAccountHandler>();
 builder.Services.AddScoped<IRequestHandler<UpgradePremiumCommand, AccountModel?>, UpgradePremiumHandler>();
 builder.Services.AddScoped<IRequestHandler<UpdateVideoCommand, VideoModel>, UpdateVideoHandler>();
 builder.Services.AddScoped<IRequestHandler<CreateVideoCommand, VideoModel>, CreateVideoHandler>();
@@ -112,7 +112,7 @@ builder.Services.AddScoped<IRequestHandler<GetAllUserQuery, IEnumerable<AccountM
 builder.Services.AddScoped<IRequestHandler<GetUserDetailsQuery, AccountModel?>, GetUserDetailsHandler>();
 builder.Services.AddScoped<IRequestHandler<AddVideoGenreCommand, VideoGenreModel>, AddVideoGenreHandler>();
 builder.Services.AddScoped<IRequestHandler<UpdateVideoGenreCommand, VideoGenreModel>, UpdateVideoGenreHandler>();
-builder.Services.AddScoped<IRequestHandler<LogoutCommand, bool>, LogoutHandler>();
+builder.Services.AddScoped<IRequestHandler<LogoutCommand, BaseResponse<bool>>, LogoutHandler>();
 builder.Services.AddScoped<IRequestHandler<CreateFeedbackCommand, BaseResponse<FeedBackDto>>, CreateFeedbackHandler>();
 
 builder.Services.Configure<MailSettings>(builder.Configuration.GetSection(nameof(MailSettings)));
@@ -127,6 +127,7 @@ builder.Services.AddScoped<IValidator<AuthCommand>, AuthCommandValidator>();
 builder.Services.AddScoped<IValidator<SaveProgressQuery>, SaveProgressCommandValidator>();
 builder.Services.AddScoped<IValidator<SignUpCommand>, SignUpCommandValidator>();
 builder.Services.AddScoped<IValidator<CreateFeedbackCommand>, CreateFeedbackCommandValidator>();
+builder.Services.AddScoped<IValidator<VerifyAccountCommand>, VerifyAccountCommandValidator>();
 
 // Register behaviour for pipeline
 builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ExceptionBehaviour<,>));

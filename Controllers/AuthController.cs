@@ -56,12 +56,34 @@ namespace SpellSmarty.Api.Controllers
         [HttpPost("verify")]
         public async Task<IActionResult> Verify([FromBody] VerifyAccountCommand command)
         {
-            return Ok(await _mediator.Send(command));
+            var response = await _mediator.Send(command);
+            if (!response.Error)
+                return Ok(response.Result);
+            else
+            {
+                var ErrorResponse = new BaseResponse<Exception>
+                {
+                    Exception = response.Exception,
+                    Message = response.Message
+                };
+                return new ErrorHandling<Exception>(ErrorResponse);
+            }
         }
         [HttpPost("logout")]
         public async Task<IActionResult> Logout(LogoutCommand command)
         {
-            return Ok(await _mediator.Send(command));
+            var response = await _mediator.Send(command);
+            if (!response.Error)
+                return Ok(response.Result);
+            else
+            {
+                var ErrorResponse = new BaseResponse<Exception>
+                {
+                    Exception = response.Exception,
+                    Message = response.Message
+                };
+                return new ErrorHandling<Exception>(ErrorResponse);
+            }
         }
 
     }
