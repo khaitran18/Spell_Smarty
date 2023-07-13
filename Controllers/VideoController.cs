@@ -26,10 +26,20 @@ namespace SpellSmarty.Api.Controllers
         //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         //[Authorize(Roles = "Free,Premium")]
         [HttpGet]
-        public async Task<ActionResult> GetVideos()
+        public async Task<IActionResult> GetVideos()
         {
-            var videos = await _mediator.Send(new GetVideosQuery());
-            return Ok(videos);
+            var response = _mediator.Send(new GetVideosQuery()).Result;
+            if (!response.Error) 
+                return Ok(response.Result);
+            else
+            {
+                var ErrorResponse = new BaseResponse<Exception>
+                {
+                    Exception = response.Exception,
+                    Message = response.Message
+                };
+                return new ErrorHandling<Exception>(ErrorResponse);
+            }
         }
 
         // GET api/<VideoController>/5

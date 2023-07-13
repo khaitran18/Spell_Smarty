@@ -93,7 +93,7 @@ builder.Services.AddSwaggerGen();
 //));
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped(typeof(IBaseRepository<>),typeof(BaseRepository<>));
-builder.Services.AddScoped<IRequestHandler<GetVideosQuery, IEnumerable<VideoDto>>, GetVideosHandler>();
+builder.Services.AddScoped<IRequestHandler<GetVideosQuery, BaseResponse<IEnumerable<VideoDto>>>, GetVideosHandler>();
 builder.Services.AddScoped<IRequestHandler<GetFeedBackQuery, IEnumerable<FeedBackDto>>, GetFeedBackHandler>();
 builder.Services.AddScoped<IRequestHandler<GetVideosByGenreQuery, IEnumerable<VideoDto>>, GetVideosByGenreHandler>();
 builder.Services.AddScoped<IRequestHandler<GetVideosByUserIdQuery, IEnumerable<VideoDto>>, GetVideosByUserIdHandler>();
