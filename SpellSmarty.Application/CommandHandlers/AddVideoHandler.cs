@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using SpellSmarty.Application.Common.Dtos;
+using SpellSmarty.Application.Common.Response;
 using SpellSmarty.Application.Dtos;
 using SpellSmarty.Application.Queries;
 using SpellSmarty.Domain.Interfaces;
@@ -13,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace SpellSmarty.Application.CommandHandlers
 {
-    public class AddVideoHandler : IRequestHandler<AddVideoCommand, VideoDto>
+    public class AddVideoHandler : IRequestHandler<AddVideoCommand, BaseResponse<VideoDto>>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
@@ -24,11 +25,22 @@ namespace SpellSmarty.Application.CommandHandlers
             _mapper = mapper;
         }
 
-        public async Task<VideoDto> Handle(AddVideoCommand request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<VideoDto>> Handle(AddVideoCommand request, CancellationToken cancellationToken)
         {
-            VideoModel model = await _unitOfWork.VideosRepository.SaveVideo(request.rating, request.subtitle, request.thumbnaillink, request.channelname, request.srcid, request.title, request.learntcount, request.description, request.level, request.premium);
-            VideoDto dto = _mapper.Map<VideoDto>(model);
-            return dto;
+            BaseResponse<VideoDto> response = new BaseResponse<VideoDto>();
+            try
+            {
+                VideoModel model = await _unitOfWork.VideosRepository.SaveVideo(request.rating, request.subtitle, request.thumbnaillink, request.channelname, request.srcid, request.title, request.learntcount, request.description, request.level, request.premium);
+                response.Result = _mapper.Map<VideoDto>(model);
+            }
+            catch(Exception ex)
+            {
+                response.Error = true;
+                response.Exception = ex;
+                response.Message = "Error in the server";
+
+            }
+            return response;
         }
     }
 }

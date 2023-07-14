@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using SpellSmarty.Application.Common.Response;
 using SpellSmarty.Domain.Models;
 using System;
 using System.Collections.Generic;
@@ -7,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace SpellSmarty.Application.Commands
-{    public class UpdateVideoCommand : IRequest<VideoModel>
+{    public class UpdateVideoCommand : IRequest<BaseResponse<VideoModel>>
     {
         public int Videoid { get; set; }
         public string Subtitle { get; set; } = null!;

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using SpellSmarty.Application.Commands;
+using SpellSmarty.Application.Common.Response;
 using SpellSmarty.Application.Dtos;
 using SpellSmarty.Application.Queries;
 using SpellSmarty.Domain.Interfaces;
@@ -14,7 +15,7 @@ using System.Threading.Tasks;
 namespace SpellSmarty.Application.CommandHandlers
 {
 
-    public class UpdateVideoHandler : IRequestHandler<UpdateVideoCommand, VideoModel>
+    public class UpdateVideoHandler : IRequestHandler<UpdateVideoCommand, BaseResponse<VideoModel>>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
@@ -25,10 +26,23 @@ namespace SpellSmarty.Application.CommandHandlers
             _mapper = mapper;
         }
 
-        public async Task<VideoModel> Handle(UpdateVideoCommand request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<VideoModel>> Handle(UpdateVideoCommand request, CancellationToken cancellationToken)
         {
-            VideoModel model = await _unitOfWork.VideosRepository.UpdateVideo(request.Videoid, request.Subtitle, request.SrcId, request.Title, request.VideoDescription, request.level, request.Premium);
-            return model;
+            BaseResponse<VideoModel> response = new BaseResponse<VideoModel>();
+            try
+            {
+                VideoModel model = await _unitOfWork.VideosRepository.UpdateVideo(request.Videoid, request.Subtitle, request.SrcId, request.Title, request.VideoDescription, request.level, request.Premium);
+                response.Result = model;
+            }
+            catch (Exception ex)
+            {
+                response.Error = true;
+                response.Exception = ex;
+                response.Message = "Error in the server";
+
+            }
+            return response;
+            
         }
     }
 }

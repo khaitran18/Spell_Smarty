@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using SpellSmarty.Application.Common.Response;
 using SpellSmarty.Domain.Models;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace SpellSmarty.Application.Commands
 {
-    public class CreateVideoCommand : IRequest<VideoModel>
+    public class CreateVideoCommand : IRequest<BaseResponse<VideoModel>>
     {
         public float? rating { get; set; }
         public string subtitle { get; set; }

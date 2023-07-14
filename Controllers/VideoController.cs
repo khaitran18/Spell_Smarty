@@ -126,15 +126,24 @@ namespace SpellSmarty.Api.Controllers
 
         [Route("CreateGenre")]
         [HttpPost]
-        public async Task<ActionResult> CreateGenre(string genreName)
+        public async Task<IActionResult> CreateGenre(string genreName)
         {
-            var returnGenre = await _mediator.Send(new AddGenreCommand(genreName));
-            return Ok(returnGenre);
+            var response = await _mediator.Send(new AddGenreCommand(genreName));
+            if (!response.Error) return Ok(response.Result);
+            else
+            {
+                var ErrorResponse = new BaseResponse<Exception>
+                {
+                    Exception = response.Exception,
+                    Message = response.Message
+                };
+                return new ErrorHandling<Exception>(ErrorResponse);
+            }
         }
 
         [Route("CreateNewVideo")]
         [HttpPost]
-        public async Task<ActionResult> CreateVideo(float? rating,
+        public async Task<IActionResult> CreateVideo(float? rating,
                                                     string subtitle,
                                                     string? thumbnaillink,
                                                     string? channelname,
@@ -145,37 +154,73 @@ namespace SpellSmarty.Api.Controllers
                                                     int level,
                                                     bool premium)
         {
-            var returnGenre = await _mediator.Send(new AddVideoCommand(rating, subtitle, thumbnaillink, channelname, srcid, title, learntcount, description, level, premium));
-            return Ok(returnGenre);
+            var response = await _mediator.Send(new AddVideoCommand(rating, subtitle, thumbnaillink, channelname, srcid, title, learntcount, description, level, premium));
+            if (!response.Error) return Ok(response.Result);
+            else
+            {
+                var ErrorResponse = new BaseResponse<Exception>
+                {
+                    Exception = response.Exception,
+                    Message = response.Message
+                };
+                return new ErrorHandling<Exception>(ErrorResponse);
+            }
         }
 
         [Route("CreateNewVideoV2")]
         [HttpPost]
-        public async Task<ActionResult> CreateVideoV2(CreateVideoCommand command)
+        public async Task<IActionResult> CreateVideoV2(CreateVideoCommand command)
         {
-            var returnGenre = await _mediator.Send(command);
-            return Ok(returnGenre);
+            var response = await _mediator.Send(command);
+            if (!response.Error) return Ok(response.Result);
+            else
+            {
+                var ErrorResponse = new BaseResponse<Exception>
+                {
+                    Exception = response.Exception,
+                    Message = response.Message
+                };
+                return new ErrorHandling<Exception>(ErrorResponse);
+            }
         }
 
         [Route("AddVideoGenre")]
         [HttpPut]
-        public async Task<ActionResult> AddVideoGenre(UpdateVideoGenreCommand command)
+        public async Task<IActionResult> AddVideoGenre(UpdateVideoGenreCommand command)
         {
-            var returnGenre = await _mediator.Send(command);
-            return Ok(returnGenre);
+            var response = await _mediator.Send(command);
+            if (!response.Error) return Ok(response.Result);
+            else
+            {
+                var ErrorResponse = new BaseResponse<Exception>
+                {
+                    Exception = response.Exception,
+                    Message = response.Message
+                };
+                return new ErrorHandling<Exception>(ErrorResponse);
+            }
         }
 
         // PUT api/<VideoController>/5
         [Route("UpdateVideo")]
         [HttpPut]
-        public async Task<ActionResult> UpdateVideo(UpdateVideoCommand command)
+        public async Task<IActionResult> UpdateVideo(UpdateVideoCommand command)
         {
-            var returnGenre = await _mediator.Send(command);
-            return Ok(returnGenre);
+            var response = await _mediator.Send(command);
+            if (!response.Error) return Ok(response.Result);
+            else
+            {
+                var ErrorResponse = new BaseResponse<Exception>
+                {
+                    Exception = response.Exception,
+                    Message = response.Message
+                };
+                return new ErrorHandling<Exception>(ErrorResponse);
+            }
         }
 
-        // DELETE api/<VideoController>/5
-        [HttpDelete("{id}")]
+            // DELETE api/<VideoController>/5
+            [HttpDelete("{id}")]
         public void Delete(int id)
         {
         }

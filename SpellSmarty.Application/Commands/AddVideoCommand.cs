@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using SpellSmarty.Application.Common.Response;
 using SpellSmarty.Application.Dtos;
 
 namespace SpellSmarty.Application.Queries
@@ -12,5 +13,5 @@ namespace SpellSmarty.Application.Queries
                                 int learntcount,
                                 string description,
                                 int level,
-                                bool premium) : IRequest<VideoDto>;
+                                bool premium) : IRequest<BaseResponse<VideoDto>>;
 }
