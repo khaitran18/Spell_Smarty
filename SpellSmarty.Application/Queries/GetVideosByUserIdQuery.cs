@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using SpellSmarty.Application.Common.Response;
 using SpellSmarty.Application.Dtos;
 using System;
 using System.Collections.Generic;
@@ -8,5 +9,5 @@ using System.Threading.Tasks;
 
 namespace SpellSmarty.Application.Queries
 {
-    public record GetVideosByUserIdQuery(string? token) : IRequest<IEnumerable<VideoDto>>;
+    public record GetVideosByUserIdQuery(string? token) : IRequest<BaseResponse<IEnumerable<VideoDto>>>;
 }

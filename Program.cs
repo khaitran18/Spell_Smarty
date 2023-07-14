@@ -26,6 +26,7 @@ using SpellSmarty.Application.Common.Validation;
 using SpellSmarty.Application.Common.Dtos;
 using SpellSmarty.Application.Common.Mappings;
 using SpellSmarty.Application.Common.Response;
+using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -94,24 +95,24 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped(typeof(IBaseRepository<>),typeof(BaseRepository<>));
 builder.Services.AddScoped<IRequestHandler<GetVideosQuery, BaseResponse<IEnumerable<VideoDto>>>, GetVideosHandler>();
-builder.Services.AddScoped<IRequestHandler<GetFeedBackQuery, IEnumerable<FeedBackDto>>, GetFeedBackHandler>();
-builder.Services.AddScoped<IRequestHandler<GetVideosByGenreQuery, IEnumerable<VideoDto>>, GetVideosByGenreHandler>();
-builder.Services.AddScoped<IRequestHandler<GetVideosByUserIdQuery, IEnumerable<VideoDto>>, GetVideosByUserIdHandler>();
-builder.Services.AddScoped<IRequestHandler<GetSingleVideoQuery, VideoDto>, GetSingleVideoHandler>();
+builder.Services.AddScoped<IRequestHandler<GetFeedBackQuery, BaseResponse<IEnumerable<FeedBackDto>>>, GetFeedBackHandler>();
+builder.Services.AddScoped<IRequestHandler<GetVideosByGenreQuery, BaseResponse<IEnumerable<VideoDto>>>, GetVideosByGenreHandler>();
+builder.Services.AddScoped<IRequestHandler<GetVideosByUserIdQuery, BaseResponse<IEnumerable<VideoDto>>>, GetVideosByUserIdHandler>();
+builder.Services.AddScoped<IRequestHandler<GetSingleVideoQuery, BaseResponse<VideoDto>>, GetSingleVideoHandler>();
 builder.Services.AddScoped<IRequestHandler<AuthCommand, BaseResponse<AuthResponseDto>>, AuthHandler>();
-builder.Services.AddScoped<IRequestHandler<GetVideosByCreatorQuery, IEnumerable<VideoDto>>, GetVideosByCreatorHandler>();
+builder.Services.AddScoped<IRequestHandler<GetVideosByCreatorQuery, BaseResponse<IEnumerable<VideoDto>>>, GetVideosByCreatorHandler>();
 builder.Services.AddScoped<IRequestHandler<SaveProgressQuery, BaseResponse<string>>, SaveProgressHandler>();
-builder.Services.AddScoped<IRequestHandler<AddGenreCommand, GenreDto>, AddGenreHandler>();
-builder.Services.AddScoped<IRequestHandler<AddVideoCommand, VideoDto>, AddVideoHandler>();
+builder.Services.AddScoped<IRequestHandler<AddGenreCommand,BaseResponse<GenreDto>>, AddGenreHandler>();
+builder.Services.AddScoped<IRequestHandler<AddVideoCommand, BaseResponse<VideoDto>>, AddVideoHandler>();
 builder.Services.AddScoped<IRequestHandler<SignUpCommand, BaseResponse<AccountModel>>, SignUpHandler>();
 builder.Services.AddScoped<IRequestHandler<VerifyAccountCommand, BaseResponse<bool>>, VerifyAccountHandler>();
 builder.Services.AddScoped<IRequestHandler<UpgradePremiumCommand, AccountModel?>, UpgradePremiumHandler>();
-builder.Services.AddScoped<IRequestHandler<UpdateVideoCommand, VideoModel>, UpdateVideoHandler>();
-builder.Services.AddScoped<IRequestHandler<CreateVideoCommand, VideoModel>, CreateVideoHandler>();
+builder.Services.AddScoped<IRequestHandler<UpdateVideoCommand, BaseResponse<VideoModel>>, UpdateVideoHandler>();
+builder.Services.AddScoped<IRequestHandler<CreateVideoCommand, BaseResponse<VideoModel>>, CreateVideoHandler>();
 builder.Services.AddScoped<IRequestHandler<GetAllUserQuery, IEnumerable<AccountModel>>, GetAllUserHandler>();
 builder.Services.AddScoped<IRequestHandler<GetUserDetailsQuery, AccountModel?>, GetUserDetailsHandler>();
 builder.Services.AddScoped<IRequestHandler<AddVideoGenreCommand, VideoGenreModel>, AddVideoGenreHandler>();
-builder.Services.AddScoped<IRequestHandler<UpdateVideoGenreCommand, VideoGenreModel>, UpdateVideoGenreHandler>();
+builder.Services.AddScoped<IRequestHandler<UpdateVideoGenreCommand, BaseResponse<VideoGenreModel>>, UpdateVideoGenreHandler>();
 builder.Services.AddScoped<IRequestHandler<LogoutCommand, BaseResponse<bool>>, LogoutHandler>();
 builder.Services.AddScoped<IRequestHandler<CreateFeedbackCommand, BaseResponse<FeedBackDto>>, CreateFeedbackHandler>();
 
@@ -128,6 +129,10 @@ builder.Services.AddScoped<IValidator<SaveProgressQuery>, SaveProgressCommandVal
 builder.Services.AddScoped<IValidator<SignUpCommand>, SignUpCommandValidator>();
 builder.Services.AddScoped<IValidator<CreateFeedbackCommand>, CreateFeedbackCommandValidator>();
 builder.Services.AddScoped<IValidator<VerifyAccountCommand>, VerifyAccountCommandValidator>();
+builder.Services.AddScoped<IValidator<AddGenreCommand>, AddGenreCommandValidator>();
+builder.Services.AddScoped<IValidator<AddVideoCommand>, AddVideoCommandValidator>();
+builder.Services.AddScoped<IValidator<CreateVideoCommand>, CreateVideoCommandValidator>();
+builder.Services.AddScoped<IValidator<UpdateVideoCommand>, UpdateVideoCommandValidator>();
 
 // Register behaviour for pipeline
 builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ExceptionBehaviour<,>));

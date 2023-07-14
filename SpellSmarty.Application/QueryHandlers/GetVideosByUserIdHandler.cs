@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using SpellSmarty.Application.Common.Response;
 using SpellSmarty.Application.Dtos;
 using SpellSmarty.Application.Queries;
 using SpellSmarty.Application.Services;
@@ -12,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace SpellSmarty.Application.QueryHandlers
 {
-    public class GetVideosByUserIdHandler : IRequestHandler<GetVideosByUserIdQuery, IEnumerable<VideoDto>>
+    public class GetVideosByUserIdHandler : IRequestHandler<GetVideosByUserIdQuery, BaseResponse<IEnumerable<VideoDto>>>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
@@ -25,12 +26,24 @@ namespace SpellSmarty.Application.QueryHandlers
             _tokenService = tokenService;
         }
 
-        public async Task<IEnumerable<VideoDto>> Handle(GetVideosByUserIdQuery request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<IEnumerable<VideoDto>>> Handle(GetVideosByUserIdQuery request, CancellationToken cancellationToken)
         {
-            string? id = _tokenService.ValidateToken(request.token)?.FindFirst("jti")?.Value;
-            int userId = int.Parse(id);
-            List<VideoDto> listDto = _mapper.Map<List<VideoDto>>(await _unitOfWork.VideosRepository.GetVideosByUserId(userId));
-            return listDto;
+            BaseResponse<IEnumerable<VideoDto>> response = new BaseResponse<IEnumerable<VideoDto>>();
+            try
+            {
+                string? id = _tokenService.ValidateToken(request.token)?.FindFirst("jti")?.Value;
+                int userId = int.Parse(id);
+                List<VideoDto> listDto = _mapper.Map<List<VideoDto>>(await _unitOfWork.VideosRepository.GetVideosByUserId(userId));
+                response.Result = listDto;
+            }
+            catch (Exception ex)
+            {
+                response.Error = true;
+                response.Exception = ex;
+                response.Message = "Error in the server";
+            }
+            return response;
+            
         }
     }
 }

@@ -5,10 +5,13 @@ using SpellSmarty.Application.Queries;
 using SpellSmarty.Domain.Interfaces;
 using SpellSmarty.Application.Services;
 using System.Security.Claims;
+using SpellSmarty.Application.Common.Response;
+using SpellSmarty.Application.Common.Dtos;
+using SpellSmarty.Domain.Models;
 
 namespace SpellSmarty.Application.QueryHandlers
 {
-    public class GetSingleVideoHandler : IRequestHandler<GetSingleVideoQuery, VideoDto>
+    public class GetSingleVideoHandler : IRequestHandler<GetSingleVideoQuery, BaseResponse<VideoDto>>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
@@ -21,35 +24,48 @@ namespace SpellSmarty.Application.QueryHandlers
             _tokenService = tokenService;
         }
 
-        public async Task<VideoDto> Handle(GetSingleVideoQuery request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<VideoDto>> Handle(GetSingleVideoQuery request, CancellationToken cancellationToken)
         {
-            //check the user is in which role
-            bool freeUser;
-            ClaimsPrincipal claim = null;
-            if (request.token == null) {
-                freeUser = true;
-            }
-            else
+            BaseResponse<VideoDto> response = new BaseResponse<VideoDto>();
+            try
             {
-                claim = _tokenService.ValidateToken(request.token);
-                freeUser = (claim?.IsInRole("Free")) ?? false;
+                //check the user is in which role
+                bool freeUser;
+                ClaimsPrincipal claim = null;
+                if (request.token == null)
+                {
+                    freeUser = true;
+                }
+                else
+                {
+                    claim = _tokenService.ValidateToken(request.token);
+                    freeUser = (claim?.IsInRole("Free")) ?? false;
+                }
+
+                // Get video with Genre and Level
+                VideoDto Dto = _mapper.Map<VideoDto>(await _unitOfWork.VideosRepository.GetVideoById(request.videoId));
+
+                //Get progress if there is
+                if (claim != null)
+                {
+                    int accountId = int.Parse(claim.FindFirst("jti").Value);
+                    string? progress = await _unitOfWork.VideoStatRepository
+                        .GetProgressByUserIdAndVideoId(accountId, request.videoId);
+                    Dto.progress = progress;
+                }
+
+                // if free user, cant see premium subtitle
+                if ((freeUser) && (Dto.Premium)) Dto.Subtitle = null;
+                response.Result = Dto;
             }
-
-            // Get video with Genre and Level
-            VideoDto Dto = _mapper.Map<VideoDto>(await _unitOfWork.VideosRepository.GetVideoById(request.videoId));
-
-            //Get progress if there is
-            if (claim != null)
+            catch (Exception ex)
             {
-                int accountId = int.Parse(claim.FindFirst("jti").Value);
-                string? progress = await _unitOfWork.VideoStatRepository
-                    .GetProgressByUserIdAndVideoId(accountId, request.videoId);
-                Dto.progress = progress;
+                response.Error = true;
+                response.Exception = ex;
+                response.Message = "Error in the server";
             }
+            return response;
             
-            // if free user, cant see premium subtitle
-            if ((freeUser)&&(Dto.Premium)) Dto.Subtitle = null;
-            return Dto;
         }
     }
 }

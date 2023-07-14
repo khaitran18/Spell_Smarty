@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using SpellSmarty.Application.Common.Dtos;
+using SpellSmarty.Application.Common.Response;
 using SpellSmarty.Application.Dtos;
 using SpellSmarty.Application.Queries;
 using SpellSmarty.Domain.Interfaces;
@@ -12,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace SpellSmarty.Application.QueryHandlers
 {
-    public class GetFeedBackHandler : IRequestHandler<GetFeedBackQuery, IEnumerable<FeedBackDto>>
+    public class GetFeedBackHandler : IRequestHandler<GetFeedBackQuery, BaseResponse<IEnumerable<FeedBackDto>>>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
@@ -23,10 +24,22 @@ namespace SpellSmarty.Application.QueryHandlers
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<FeedBackDto>> Handle(GetFeedBackQuery request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<IEnumerable<FeedBackDto>>> Handle(GetFeedBackQuery request, CancellationToken cancellationToken)
         {
-            List<FeedBackDto> listDto = _mapper.Map<List<FeedBackDto>>(await _unitOfWork.FeedBackRepository.GetFeedBack());
-            return listDto;
+            BaseResponse<IEnumerable<FeedBackDto>> response = new BaseResponse<IEnumerable<FeedBackDto>>();
+            try
+            {
+                List<FeedBackDto> listDto = _mapper.Map<List<FeedBackDto>>(await _unitOfWork.FeedBackRepository.GetFeedBack());
+                response.Result = listDto;
+            }
+            catch (Exception ex)
+            {
+                response.Error = true;
+                response.Exception = ex;
+                response.Message = "Error in the server";
+            }
+            return response;
+           
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using SpellSmarty.Application.Common.Response;
 using SpellSmarty.Application.Dtos;
 using SpellSmarty.Application.Queries;
 using SpellSmarty.Domain.Interfaces;
@@ -11,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace SpellSmarty.Application.QueryHandlers
 {
-    public class GetVideosByCreatorHandler : IRequestHandler<GetVideosByCreatorQuery, IEnumerable<VideoDto>>
+    public class GetVideosByCreatorHandler : IRequestHandler<GetVideosByCreatorQuery, BaseResponse<IEnumerable<VideoDto>>>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
@@ -22,10 +23,22 @@ namespace SpellSmarty.Application.QueryHandlers
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<VideoDto>> Handle(GetVideosByCreatorQuery request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<IEnumerable<VideoDto>>> Handle(GetVideosByCreatorQuery request, CancellationToken cancellationToken)
         {
-            List<VideoDto> listDto = _mapper.Map<List<VideoDto>>(await _unitOfWork.VideosRepository.GetVideosByCreator(request.videoId));
-            return listDto;
+            BaseResponse<IEnumerable<VideoDto>> response = new BaseResponse<IEnumerable<VideoDto>>();
+            try
+            {
+                List<VideoDto> listDto = _mapper.Map<List<VideoDto>>(await _unitOfWork.VideosRepository.GetVideosByCreator(request.videoId));
+                response.Result = listDto;
+            }
+            catch (Exception ex)
+            {
+                response.Error = true;
+                response.Exception = ex;
+                response.Message = "Error in the server";
+            }
+            return response;
+            
         }
     }
 }

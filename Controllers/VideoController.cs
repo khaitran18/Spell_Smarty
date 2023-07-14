@@ -45,40 +45,90 @@ namespace SpellSmarty.Api.Controllers
         // GET api/<VideoController>/5
         [Route("GetVideoByVideoId")]
         [HttpGet()]
-        public async Task<ActionResult> GetSingleVideo([FromHeader] string? Authorization, int videoId)
+        public async Task<IActionResult> GetSingleVideo([FromHeader] string? Authorization, int videoId)
         {
-            var video = await _mediator.Send(new GetSingleVideoQuery(videoId, Authorization));
-            return Ok(video);
+            var response = await _mediator.Send(new GetSingleVideoQuery(videoId, Authorization));
+            if (!response.Error)
+                return Ok(response.Result);
+            else
+            {
+                var ErrorResponse = new BaseResponse<Exception>
+                {
+                    Exception = response.Exception,
+                    Message = response.Message
+                };
+                return new ErrorHandling<Exception>(ErrorResponse);
+            }
         }
 
         [Route("GetVideosByCreator")]
         [HttpGet()]
-        public async Task<ActionResult> GetVideosByCreator(int videoId)
+        public async Task<IActionResult> GetVideosByCreator(int videoId)
         {
-            var video = await _mediator.Send(new GetVideosByCreatorQuery(videoId));
-            return Ok(video);
+            var response = await _mediator.Send(new GetVideosByCreatorQuery(videoId));
+            if (!response.Error)
+                return Ok(response.Result);
+            else
+            {
+                var ErrorResponse = new BaseResponse<Exception>
+                {
+                    Exception = response.Exception,
+                    Message = response.Message
+                };
+                return new ErrorHandling<Exception>(ErrorResponse);
+            }
         }
         [Route("GetVideoByGenre")]
         [HttpGet()]
-        public async Task<ActionResult> GetVideosByGenre(int videoId)
+        public async Task<IActionResult> GetVideosByGenre(int videoId)
         {
-            var videos = await _mediator.Send(new GetVideosByGenreQuery(videoId));
-            return Ok(videos);
+            var response = await _mediator.Send(new GetVideosByGenreQuery(videoId));
+            if (!response.Error)
+                return Ok(response.Result);
+            else
+            {
+                var ErrorResponse = new BaseResponse<Exception>
+                {
+                    Exception = response.Exception,
+                    Message = response.Message
+                };
+                return new ErrorHandling<Exception>(ErrorResponse);
+            }
         }
         [Route("GetVideoByUserId")]
         [HttpGet()]
-        public async Task<ActionResult> GetVideosByUserId([FromHeader] string? Authorization)
+        public async Task<IActionResult> GetVideosByUserId([FromHeader] string? Authorization)
         {
-            var videos = await _mediator.Send(new GetVideosByUserIdQuery(Authorization));
-            return Ok(videos);
+            var response = await _mediator.Send(new GetVideosByUserIdQuery(Authorization));
+            if (!response.Error)
+                return Ok(response.Result);
+            else
+            {
+                var ErrorResponse = new BaseResponse<Exception>
+                {
+                    Exception = response.Exception,
+                    Message = response.Message
+                };
+                return new ErrorHandling<Exception>(ErrorResponse);
+            }
         }
 
         [Route("Feedback")]
         [HttpGet()]
         public async Task<IActionResult> GetFeedBack()
         {
-            var videos = await _mediator.Send(new GetFeedBackQuery());
-            return Ok(videos);
+            var response = await _mediator.Send(new GetFeedBackQuery());
+            if (!response.Error)
+                return Ok(response.Result);
+            else
+            {
+                var ErrorResponse = new BaseResponse<Exception>
+                {
+                    Exception = response.Exception,
+                    Message = response.Message
+                };
+                return new ErrorHandling<Exception>(ErrorResponse);
+            }
         }
         [HttpPost("feedback/{videoid}")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
