@@ -25,7 +25,7 @@ namespace SpellSmarty.Application.Common.Behaviour
             var response = await next();
             if (response is BaseResponse<AuthResponseDto> authResponseDto)
             {
-                if (authResponseDto.Error!=null) _cookieService.WriteCookie("token", authResponseDto.Result.Token, 1);
+                if (!authResponseDto.Error) _cookieService.WriteCookie("token", authResponseDto.Result.Token, 1);
             }
             return response;
         }
